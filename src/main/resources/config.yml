@@ -1,0 +1,26 @@
+Teleport:
+  Enabled: true
+  Types:
+    - ENEMY
+  Receivers:
+    - LEADER
+    - OFFICER
+    - RECRUIT
+    - MEMBER
+  Enemy Alert Message: '&4An enemy has teleported into your land!'
+  Neutral Alert Message: '&4Someone has teleported into your land!'
+  Ally Alert Message: '&4An ally has teleported into your land!'
+  Truce Alert Message: '&4A member of a faction you have a truce with has teleported into your land!'
+Move:
+  Enabled: false
+  Types:
+    - ENEMY
+  Receivers:
+    - LEADER
+    - OFFICER
+    - RECRUIT
+    - MEMBER
+  Enemy Alert Message: '&4An enemy has entered your land!'
+  Neutral Alert Message: '&4Someone has entered your land!'
+  Ally Alert Message: '&4An ally has entered your land!'
+  Truce Alert Message: '&4A member of a faction you have a truce with has entered your land!'
