@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.massivecraft.factions.Rel;
 
-public class AlertGroup {
+public class SimpleAlertGroup {
 
 	private final boolean enabled;
 	private final String enemy;
@@ -14,7 +14,7 @@ public class AlertGroup {
 	private final List<Rel> types;
 	private final List<Rel> receivers;
 	
-	public AlertGroup(boolean enabled, String enemy, String ally, String neutral, String truce, List<Rel> types, List<Rel> receivers){
+	public SimpleAlertGroup(boolean enabled, String enemy, String ally, String neutral, String truce, List<Rel> types, List<Rel> receivers){
 		this.enabled = enabled;
 		this.enemy = enemy;
 		this.ally = ally;

@@ -19,8 +19,7 @@ public class FactionAlert extends JavaPlugin{
 	@Override
 	public void onEnable(){
 		this.saveDefaultConfig();
-		AlertGroup[] groups = this.readConfig();
-		this.getServer().getPluginManager().registerEvents(new FactionListeners(groups[0], groups[1]), this);
+		this.getServer().getPluginManager().registerEvents(this.readConfig(), this);
 		this.getLogger().info("FactionAlert enabled!");
 	}
 	
@@ -36,15 +35,14 @@ public class FactionAlert extends JavaPlugin{
 		}
 		this.reloadConfig();
 		HandlerList.unregisterAll(this);
-		AlertGroup[] groups = this.readConfig();
-		this.getServer().getPluginManager().registerEvents(new FactionListeners(groups[0], groups[1]), this);
+		this.getServer().getPluginManager().registerEvents(this.readConfig(), this);
 		sender.sendMessage(ChatColor.GREEN+"FactionAlert reloaded.");
 		return true;
 	}
 	
-	public AlertGroup[] readConfig(){
+	public FactionListeners readConfig(){
 		FileConfiguration c = this.getConfig();
-		AlertGroup[] alertGroups = new AlertGroup[this.configEntries.length];
+		SimpleAlertGroup[] alertGroups = new SimpleAlertGroup[this.configEntries.length];
 		for(int i = 0; i < this.configEntries.length; i++){
 			String entry = this.configEntries[i];
 			boolean enabled = c.getBoolean(entry.concat(".Enabled"));
@@ -72,9 +70,25 @@ public class FactionAlert extends JavaPlugin{
 			String ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")));
 			String neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")));
 			String truce = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Truce Alert Message")));
-			alertGroups[i] = new AlertGroup(enabled, enemy, ally, neutral, truce, types, receivers);
+			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, truce, types, receivers);
 		}
-		return alertGroups;
+		boolean enabled = c.getBoolean("Member Death.Enabled");
+		List<String> receiverStrings = c.getStringList("Member Death.Receivers");
+		List<Rel> receivers = new ArrayList<Rel>();
+		for(String receiverString:receiverStrings){
+			Rel relation = Rel.valueOf(receiverString);
+			if(relation == null){
+				this.getLogger().warning("Failed to read receiver ".concat(receiverString).concat(" for ").concat("Member Death"));
+				continue;
+			}
+			receivers.add(relation);
+		}
+		String leader = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Leader Alert Message"));
+		String officer = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Officer Alert Message"));
+		String member = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message"));
+		String recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message"));
+		FactionSpecificAlertGroup death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers);
+		return new FactionListeners(alertGroups[0], alertGroups[1], death);
 	}
 	
 }

@@ -3,6 +3,7 @@ package me.superckl.factionalert;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -15,13 +16,15 @@ import com.massivecraft.mcore.ps.PS;
 
 public class FactionListeners implements Listener{
 
-	private final AlertGroup teleport;
-	private final AlertGroup move;
+	private final SimpleAlertGroup teleport;
+	private final SimpleAlertGroup move;
+	private final FactionSpecificAlertGroup death;
 	//private final AlertGroup disband;
 	
-	public FactionListeners(AlertGroup teleport, AlertGroup move){
+	public FactionListeners(SimpleAlertGroup teleport, SimpleAlertGroup move, FactionSpecificAlertGroup death){
 		this.teleport = teleport;
 		this.move = move;
+		this.death = death;
 		//this.disband = disband;
 	}
 	
@@ -64,6 +67,20 @@ public class FactionListeners implements Listener{
 			Rel rel = player.getRelationTo(faction);
 			if(this.move.getReceivers().contains(rel))
 				player.sendMessage(this.move.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getName()));
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerDeath(PlayerDeathEvent e){
+		if(!this.death.isEnabled())
+			return;
+		Faction faction = UPlayer.get(e.getEntity()).getFaction();
+		if(!this.isValid(faction))
+			return;
+		for(UPlayer player:faction.getUPlayersWhereOnline(true)){
+			Rel relation = player.getRelationTo(faction);
+			if(this.death.getReceivers().contains(relation))
+				player.sendMessage(this.death.getAlert(relation).replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getName()));
 		}
 	}
 	
