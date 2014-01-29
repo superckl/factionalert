@@ -13,8 +13,8 @@ public class SimpleAlertGroup {
 	private final String truce;
 	private final List<Rel> types;
 	private final List<Rel> receivers;
-	
-	public SimpleAlertGroup(boolean enabled, String enemy, String ally, String neutral, String truce, List<Rel> types, List<Rel> receivers){
+
+	public SimpleAlertGroup(final boolean enabled, final String enemy, final String ally, final String neutral, final String truce, final List<Rel> types, final List<Rel> receivers){
 		this.enabled = enabled;
 		this.enemy = enemy;
 		this.ally = ally;
@@ -23,44 +23,44 @@ public class SimpleAlertGroup {
 		this.types = types;
 		this.receivers = receivers;
 	}
-	
-	public String getAlert(Rel rel){
+
+	public String getAlert(final Rel rel){
 		if(rel == Rel.ENEMY)
 			return this.enemy;
 		else if(rel == Rel.ALLY)
 			return this.ally;
 		else if(rel == Rel.TRUCE)
 			return this.truce;
-		else 
+		else
 			return this.neutral;
 	}
 
 	public boolean isEnabled() {
-		return enabled;
+		return this.enabled;
 	}
 
 	public String getEnemy() {
-		return enemy;
+		return this.enemy;
 	}
 
 	public String getAlly() {
-		return ally;
+		return this.ally;
 	}
 
 	public String getNeutral() {
-		return neutral;
+		return this.neutral;
 	}
-	
+
 	public String getTruce(){
 		return this.truce;
 	}
 
 	public List<Rel> getTypes() {
-		return types;
+		return this.types;
 	}
 
 	public List<Rel> getReceivers() {
-		return receivers;
+		return this.receivers;
 	}
-	
+
 }

@@ -12,8 +12,8 @@ public class FactionSpecificAlertGroup {
 	private final String recruit;
 	private final String member;
 	private final List<Rel> receivers;
-	
-	public FactionSpecificAlertGroup(boolean enabled, String leader, String officer, String recruit, String member, List<Rel> receivers){
+
+	public FactionSpecificAlertGroup(final boolean enabled, final String leader, final String officer, final String recruit, final String member, final List<Rel> receivers){
 		this.enabled = enabled;
 		this.leader = leader;
 		this.officer = officer;
@@ -21,8 +21,8 @@ public class FactionSpecificAlertGroup {
 		this.member = member;
 		this.receivers = receivers;
 	}
-	
-	public String getAlert(Rel rel){
+
+	public String getAlert(final Rel rel){
 		if(rel == Rel.LEADER)
 			return this.leader;
 		else if(rel == Rel.OFFICER)
@@ -34,27 +34,27 @@ public class FactionSpecificAlertGroup {
 	}
 
 	public boolean isEnabled() {
-		return enabled;
+		return this.enabled;
 	}
 
 	public String getLeader() {
-		return leader;
+		return this.leader;
 	}
 
 	public String getOfficer() {
-		return officer;
+		return this.officer;
 	}
 
 	public String getRecruit() {
-		return recruit;
+		return this.recruit;
 	}
 
 	public String getMember() {
-		return member;
+		return this.member;
 	}
 
 	public List<Rel> getReceivers() {
-		return receivers;
+		return this.receivers;
 	}
-	
+
 }

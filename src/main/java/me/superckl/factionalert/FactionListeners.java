@@ -20,71 +20,71 @@ public class FactionListeners implements Listener{
 	private final SimpleAlertGroup move;
 	private final FactionSpecificAlertGroup death;
 	//private final AlertGroup disband;
-	
-	public FactionListeners(SimpleAlertGroup teleport, SimpleAlertGroup move, FactionSpecificAlertGroup death){
+
+	public FactionListeners(final SimpleAlertGroup teleport, final SimpleAlertGroup move, final FactionSpecificAlertGroup death){
 		this.teleport = teleport;
 		this.move = move;
 		this.death = death;
 		//this.disband = disband;
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerTeleport(PlayerTeleportEvent e){
+	public void onPlayerTeleport(final PlayerTeleportEvent e){
 		if(!this.teleport.isEnabled())
 			return;
-		Faction faction = BoardColls.get().getFactionAt(PS.valueOf(e.getTo()));
-		if(!this.isValid(faction))
+		final Faction faction = BoardColls.get().getFactionAt(PS.valueOf(e.getTo()));
+		if(!FactionListeners.isValid(faction))
 			return;
-		Faction oFaction = UPlayer.get(e.getPlayer()).getFaction();
-		if(!this.isValid(oFaction))
+		final Faction oFaction = UPlayer.get(e.getPlayer()).getFaction();
+		if(!FactionListeners.isValid(oFaction))
 			return;
-		Rel relation = faction.getRelationTo(oFaction);
+		final Rel relation = faction.getRelationTo(oFaction);
 		if(!this.teleport.getTypes().contains(relation))
 			return;
-		for(UPlayer player:faction.getUPlayersWhereOnline(true)){
-			Rel rel = player.getRelationTo(faction);
+		for(final UPlayer player:faction.getUPlayersWhereOnline(true)){
+			final Rel rel = player.getRelationTo(faction);
 			if(this.teleport.getReceivers().contains(rel))
 				player.sendMessage(this.teleport.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getName()));
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerMove(PlayerMoveEvent e){
+	public void onPlayerMove(final PlayerMoveEvent e){
 		if(!this.move.isEnabled())
 			return;
-		Faction faction = BoardColls.get().getFactionAt(PS.valueOf(e.getTo()));
+		final Faction faction = BoardColls.get().getFactionAt(PS.valueOf(e.getTo()));
 		if(BoardColls.get().getFactionAt(PS.valueOf(e.getFrom())).getId().equals(faction.getId()))
 			return;
-		if(!this.isValid(faction))
+		if(!FactionListeners.isValid(faction))
 			return;
-		Faction oFaction = UPlayer.get(e.getPlayer()).getFaction();
-		if(!this.isValid(oFaction))
+		final Faction oFaction = UPlayer.get(e.getPlayer()).getFaction();
+		if(!FactionListeners.isValid(oFaction))
 			return;
-		Rel relation = faction.getRelationTo(oFaction);
+		final Rel relation = faction.getRelationTo(oFaction);
 		if(!this.move.getTypes().contains(relation))
 			return;
-		for(UPlayer player:faction.getUPlayersWhereOnline(true)){
-			Rel rel = player.getRelationTo(faction);
+		for(final UPlayer player:faction.getUPlayersWhereOnline(true)){
+			final Rel rel = player.getRelationTo(faction);
 			if(this.move.getReceivers().contains(rel))
 				player.sendMessage(this.move.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getName()));
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerDeath(PlayerDeathEvent e){
+	public void onPlayerDeath(final PlayerDeathEvent e){
 		if(!this.death.isEnabled())
 			return;
-		Faction faction = UPlayer.get(e.getEntity()).getFaction();
-		if(!this.isValid(faction))
+		final Faction faction = UPlayer.get(e.getEntity()).getFaction();
+		if(!FactionListeners.isValid(faction))
 			return;
-		for(UPlayer player:faction.getUPlayersWhereOnline(true)){
-			Rel relation = player.getRelationTo(faction);
+		for(final UPlayer player:faction.getUPlayersWhereOnline(true)){
+			final Rel relation = player.getRelationTo(faction);
 			if(this.death.getReceivers().contains(relation))
 				player.sendMessage(this.death.getAlert(relation).replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getName()));
 		}
 	}
-	
-/*	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+
+	/*	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onFactionDisband(FactionsEventDisband e){
 		if(!this.disband.isEnabled())
 			return;
@@ -108,9 +108,9 @@ public class FactionListeners implements Listener{
 			}
 		}
 	}*/
-	
-	private boolean isValid(Faction faction){
-		return !faction.isNone() && !faction.getId().equals(UConf.get(faction).factionIdSafezone) && !faction.getId().equals(UConf.get(faction).factionIdWarzone);
+
+	public static boolean isValid(final Faction faction){
+		return faction != null && !faction.isNone() && !faction.getId().equals(UConf.get(faction).factionIdSafezone) && !faction.getId().equals(UConf.get(faction).factionIdWarzone);
 	}
-	
+
 }
