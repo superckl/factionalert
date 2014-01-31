@@ -91,9 +91,9 @@ public class FactionAlert extends JavaPlugin{
 		this.getServer().getPluginManager().registerEvents(new FactionListeners(alertGroups[0], alertGroups[1], death), this);
 		
 		final boolean prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
-		final String prefixFormat = c.getString("Faction Nameplate.Prefix.Format");
+		final String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format"));
 		final boolean suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
-		final String suffixFormat = c.getString("Faction Nameplate.Suffix.Format");
+		final String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format"));
 		if(suffix || prefix)
 			this.getServer().getPluginManager().registerEvents(new NameplateManager(this.getServer().getScoreboardManager().getNewScoreboard(), suffix, prefix, suffixFormat, prefixFormat), this);
 	}
