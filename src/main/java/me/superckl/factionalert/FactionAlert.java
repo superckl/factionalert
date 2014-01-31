@@ -89,7 +89,7 @@ public class FactionAlert extends JavaPlugin{
 		final String recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message"));
 		final FactionSpecificAlertGroup death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers);
 		this.getServer().getPluginManager().registerEvents(new FactionListeners(alertGroups[0], alertGroups[1], death), this);
-		
+
 		final boolean prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
 		final String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format"));
 		final boolean suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");

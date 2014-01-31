@@ -110,7 +110,7 @@ public class FactionListeners implements Listener{
 	}*/
 
 	public static boolean isValid(final Faction faction){
-		return faction != null && !faction.isNone() && !faction.getId().equals(UConf.get(faction).factionIdSafezone) && !faction.getId().equals(UConf.get(faction).factionIdWarzone);
+		return (faction != null) && !faction.isNone() && !faction.getId().equals(UConf.get(faction).factionIdSafezone) && !faction.getId().equals(UConf.get(faction).factionIdWarzone);
 	}
 
 }
