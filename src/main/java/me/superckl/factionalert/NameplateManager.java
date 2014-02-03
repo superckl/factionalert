@@ -31,6 +31,8 @@ public class NameplateManager implements Listener{
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent e){
+		if(!this.prefix && !this.suffix)
+			return;
 		e.getPlayer().setScoreboard(this.scoreboard);
 		final Faction faction = UPlayer.get(e.getPlayer()).getFaction();
 		if(!FactionListeners.isValid(faction))
