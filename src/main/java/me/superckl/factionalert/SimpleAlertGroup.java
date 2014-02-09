@@ -2,27 +2,28 @@ package me.superckl.factionalert;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import com.massivecraft.factions.Rel;
 
+@AllArgsConstructor
 public class SimpleAlertGroup {
 
+	@Getter
 	private final boolean enabled;
+	@Getter
 	private final String enemy;
+	@Getter
 	private final String ally;
+	@Getter
 	private final String neutral;
+	@Getter
 	private final String truce;
+	@Getter
 	private final List<Rel> types;
+	@Getter
 	private final List<Rel> receivers;
-
-	public SimpleAlertGroup(final boolean enabled, final String enemy, final String ally, final String neutral, final String truce, final List<Rel> types, final List<Rel> receivers){
-		this.enabled = enabled;
-		this.enemy = enemy;
-		this.ally = ally;
-		this.neutral = neutral;
-		this.truce = truce;
-		this.types = types;
-		this.receivers = receivers;
-	}
 
 	public String getAlert(final Rel rel){
 		if(rel == Rel.ENEMY)
@@ -33,34 +34,6 @@ public class SimpleAlertGroup {
 			return this.truce;
 		else
 			return this.neutral;
-	}
-
-	public boolean isEnabled() {
-		return this.enabled;
-	}
-
-	public String getEnemy() {
-		return this.enemy;
-	}
-
-	public String getAlly() {
-		return this.ally;
-	}
-
-	public String getNeutral() {
-		return this.neutral;
-	}
-
-	public String getTruce(){
-		return this.truce;
-	}
-
-	public List<Rel> getTypes() {
-		return this.types;
-	}
-
-	public List<Rel> getReceivers() {
-		return this.receivers;
 	}
 
 }

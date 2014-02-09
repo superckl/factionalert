@@ -1,5 +1,7 @@
 package me.superckl.factionalert;
 
+import lombok.AllArgsConstructor;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,19 +16,13 @@ import com.massivecraft.factions.entity.UConf;
 import com.massivecraft.factions.entity.UPlayer;
 import com.massivecraft.mcore.ps.PS;
 
+@AllArgsConstructor
 public class FactionListeners implements Listener{
 
 	private final SimpleAlertGroup teleport;
 	private final SimpleAlertGroup move;
 	private final FactionSpecificAlertGroup death;
 	//private final AlertGroup disband;
-
-	public FactionListeners(final SimpleAlertGroup teleport, final SimpleAlertGroup move, final FactionSpecificAlertGroup death){
-		this.teleport = teleport;
-		this.move = move;
-		this.death = death;
-		//this.disband = disband;
-	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerTeleport(final PlayerTeleportEvent e){
@@ -50,7 +46,7 @@ public class FactionListeners implements Listener{
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerMove(final PlayerMoveEvent e){
-		if(!this.move.isEnabled())
+		if(!this.move.isEnabled() || e instanceof PlayerTeleportEvent)
 			return;
 		final Faction faction = BoardColls.get().getFactionAt(PS.valueOf(e.getTo()));
 		if(BoardColls.get().getFactionAt(PS.valueOf(e.getFrom())).getId().equals(faction.getId()))

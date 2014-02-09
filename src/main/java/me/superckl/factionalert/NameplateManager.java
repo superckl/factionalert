@@ -1,5 +1,7 @@
 package me.superckl.factionalert;
 
+import lombok.AllArgsConstructor;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,6 +15,7 @@ import com.massivecraft.factions.entity.UPlayer;
 import com.massivecraft.factions.event.FactionsEventMembershipChange;
 import com.massivecraft.factions.event.FactionsEventMembershipChange.MembershipChangeReason;
 
+@AllArgsConstructor
 public class NameplateManager implements Listener{
 
 	private final Scoreboard scoreboard;
@@ -20,14 +23,6 @@ public class NameplateManager implements Listener{
 	private final boolean prefix;
 	private final String suffixFormat;
 	private final String prefixFormat;
-
-	public NameplateManager(final Scoreboard scoreboard, final boolean suffix, final boolean prefix, final String suffixFormat, final String prefixFormat){
-		this.scoreboard = scoreboard;
-		this.suffix = suffix;
-		this.prefix = prefix;
-		this.prefixFormat = prefixFormat;
-		this.suffixFormat = suffixFormat;
-	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent e){
