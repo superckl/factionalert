@@ -32,13 +32,14 @@
     <dependency>
       <groupId>com.massivecraft</groupId>
       <artifactId>factions</artifactId>
-      <version>2.3.0</version>
+      <version>1.6.9.4</version>
     </dependency>
     <dependency>
-      <groupId>com.massivecraft</groupId>
-      <artifactId>mcore</artifactId>
-      <version>7.0.1</version>
-    </dependency>
+		<groupId>org.projectlombok</groupId>
+		<artifactId>lombok</artifactId>
+		<version>1.12.2</version>
+		<scope>provided</scope>
+	</dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

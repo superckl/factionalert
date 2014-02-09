@@ -1,5 +1,7 @@
 package me.superckl.factionalert;
 
+import lombok.AllArgsConstructor;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -8,11 +10,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import com.massivecraft.factions.entity.Faction;
-import com.massivecraft.factions.entity.UPlayer;
-import com.massivecraft.factions.event.FactionsEventMembershipChange;
-import com.massivecraft.factions.event.FactionsEventMembershipChange.MembershipChangeReason;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.event.FPlayerJoinEvent;
+import com.massivecraft.factions.event.FPlayerLeaveEvent;
 
+@AllArgsConstructor
 public class NameplateManager implements Listener{
 
 	private final Scoreboard scoreboard;
@@ -21,29 +24,21 @@ public class NameplateManager implements Listener{
 	private final String suffixFormat;
 	private final String prefixFormat;
 
-	public NameplateManager(final Scoreboard scoreboard, final boolean suffix, final boolean prefix, final String suffixFormat, final String prefixFormat){
-		this.scoreboard = scoreboard;
-		this.suffix = suffix;
-		this.prefix = prefix;
-		this.prefixFormat = prefixFormat;
-		this.suffixFormat = suffixFormat;
-	}
-
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent e){
 		if(!this.prefix && !this.suffix)
 			return;
 		e.getPlayer().setScoreboard(this.scoreboard);
-		final Faction faction = UPlayer.get(e.getPlayer()).getFaction();
+		final Faction faction = FPlayers.i.get(e.getPlayer()).getFaction();
 		if(!FactionListeners.isValid(faction))
 			return;
-		Team team = NameplateManager.this.scoreboard.getTeam(faction.getName());
+		Team team = NameplateManager.this.scoreboard.getTeam(faction.getTag());
 		if(team == null){
-			team = this.scoreboard.registerNewTeam(faction.getName());
+			team = this.scoreboard.registerNewTeam(faction.getTag());
 			if(this.suffix)
-				team.setSuffix(this.format(this.suffixFormat, faction.getName()));
+				team.setSuffix(this.format(this.suffixFormat, faction.getTag()));
 			if(this.prefix)
-				team.setPrefix(this.format(this.prefixFormat, faction.getName()));
+				team.setPrefix(this.format(this.prefixFormat, faction.getTag()));
 		}
 		team.addPlayer(e.getPlayer());
 	}
@@ -57,24 +52,24 @@ public class NameplateManager implements Listener{
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerLeaveOrJoinFaction(final FactionsEventMembershipChange e){
-		final MembershipChangeReason r = e.getReason();
-		if((r == MembershipChangeReason.CREATE) || (r == MembershipChangeReason.JOIN)){
-			Team team = this.scoreboard.getTeam(e.getNewFaction().getName());
-			if(team == null){
-				team = this.scoreboard.registerNewTeam(e.getNewFaction().getName());
-				if(this.suffix)
-					team.setSuffix(this.format(this.suffixFormat, e.getNewFaction().getName()));
-				if(this.prefix)
-					team.setPrefix(this.format(this.prefixFormat, e.getNewFaction().getName()));
-			}
-			team.addPlayer(e.getUPlayer().getPlayer());
-		}else if((r == MembershipChangeReason.DISBAND) || (r == MembershipChangeReason.KICK) || (r == MembershipChangeReason.LEAVE)){
-			final Team team = this.scoreboard.getPlayerTeam(e.getUPlayer().getPlayer());
-			if(team == null)
-				return;
-			team.removePlayer(e.getUPlayer().getPlayer());
+	public void onPlayerLeaveFaction(FPlayerLeaveEvent e){
+		final Team team = this.scoreboard.getPlayerTeam(e.getFPlayer().getPlayer());
+		if(team == null)
+			return;
+		team.removePlayer(e.getFPlayer().getPlayer());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerJoinFaction(FPlayerJoinEvent e){
+		Team team = this.scoreboard.getTeam(e.getFaction().getTag());
+		if(team == null){
+			team = this.scoreboard.registerNewTeam(e.getFaction().getTag());
+			if(this.suffix)
+				team.setSuffix(this.format(this.suffixFormat, e.getFaction().getTag()));
+			if(this.prefix)
+				team.setPrefix(this.format(this.prefixFormat, e.getFaction().getTag()));
 		}
+		team.addPlayer(e.getFPlayer().getPlayer());
 	}
 
 	private String format(final String format, String name){
