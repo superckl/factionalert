@@ -2,6 +2,8 @@ package me.superckl.factionalert;
 
 import lombok.AllArgsConstructor;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -65,7 +67,12 @@ public class NameplateManager implements Listener{
 			}
 			team.addPlayer(e.getUPlayer().getPlayer());
 		}else if((r == MembershipChangeReason.DISBAND) || (r == MembershipChangeReason.KICK) || (r == MembershipChangeReason.LEAVE)){
-			final Team team = this.scoreboard.getPlayerTeam(e.getUPlayer().getPlayer());
+			OfflinePlayer player = e.getUPlayer().getPlayer();
+			if(player == null)
+				player = Bukkit.getOfflinePlayer(e.getUPlayer().getName());
+			if(player == null)
+				return;
+			final Team team = this.scoreboard.getPlayerTeam(player);
 			if(team == null)
 				return;
 			team.removePlayer(e.getUPlayer().getPlayer());
