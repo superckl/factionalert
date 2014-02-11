@@ -2,6 +2,8 @@ package me.superckl.factionalert;
 
 import lombok.AllArgsConstructor;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -53,7 +55,12 @@ public class NameplateManager implements Listener{
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerLeaveFaction(FPlayerLeaveEvent e){
-		final Team team = this.scoreboard.getPlayerTeam(e.getFPlayer().getPlayer());
+		OfflinePlayer player = e.getFPlayer().getPlayer();
+		if(player == null)
+			player = Bukkit.getOfflinePlayer(e.getFPlayer().getName());
+		if(player == null)
+			return;
+		final Team team = this.scoreboard.getPlayerTeam(player);
 		if(team == null)
 			return;
 		team.removePlayer(e.getFPlayer().getPlayer());
