@@ -30,6 +30,8 @@ public class NameplateManager implements Listener{
 	public void onPlayerJoin(final PlayerJoinEvent e){
 		if(!this.prefix && !this.suffix)
 			return;
+		if(e.getPlayer().hasPermission("factionalert.noalert.nameplate"))
+  			return;
 		e.getPlayer().setScoreboard(this.scoreboard);
 		final Faction faction = FPlayers.i.get(e.getPlayer()).getFaction();
 		if(!FactionListeners.isValid(faction))
@@ -68,6 +70,8 @@ public class NameplateManager implements Listener{
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoinFaction(FPlayerJoinEvent e){
+		if(e.getFPlayer().getPlayer().hasPermission("factionalert.noalert.nameplate"))
+  			return;
 		Team team = this.scoreboard.getTeam(e.getFaction().getTag());
 		if(team == null){
 			team = this.scoreboard.registerNewTeam(e.getFaction().getTag());

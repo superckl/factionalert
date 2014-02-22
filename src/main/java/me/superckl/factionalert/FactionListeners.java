@@ -27,6 +27,8 @@ public class FactionListeners implements Listener{
 	public void onPlayerTeleport(final PlayerTeleportEvent e){
 		if(!this.teleport.isEnabled())
 			return;
+		if(e.getPlayer().hasPermission("factionalert.noalert.teleport"))
+  			return;
 		final Faction faction = Board.getFactionAt(new FLocation(e.getTo()));
 		if(!FactionListeners.isValid(faction))
 			return;
@@ -45,6 +47,8 @@ public class FactionListeners implements Listener{
 	public void onPlayerMove(final PlayerMoveEvent e){
 		if(!this.move.isEnabled() || e instanceof PlayerTeleportEvent)
 			return;
+		if(e.getPlayer().hasPermission("factionalert.noalert.move"))
+  			return;
 		final Faction faction = Board.getFactionAt(new FLocation(e.getTo()));
 		if(Board.getFactionAt(new FLocation(e.getFrom())).getId().equals(faction.getId()))
 			return;
@@ -65,6 +69,8 @@ public class FactionListeners implements Listener{
 	public void onPlayerDeath(final PlayerDeathEvent e){
 		if(!this.death.isEnabled())
 			return;
+		if(e.getEntity().hasPermission("factionalert.noalert.death"))
+  			return;
 		final Faction faction = FPlayers.i.get(e.getEntity()).getFaction();
 		if(!FactionListeners.isValid(faction))
 			return;
@@ -72,31 +78,6 @@ public class FactionListeners implements Listener{
 			player.sendMessage(this.death.getAlert().replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getTag()));
 		}
 	}
-
-	/*	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onFactionDisband(FactionsEventDisband e){
-		if(!this.disband.isEnabled())
-			return;
-		Faction faction = e.getFaction();
-		if(!this.isValid(faction))
-			return;
-		List<Player> defensiveCopy = new ArrayList<Player>(Arrays.asList(Bukkit.getOnlinePlayers()));
-		ListIterator<Player> it = defensiveCopy.listIterator();
-		while(it.hasNext()){
-			Faction oFaction = UPlayer.get(it.next()).getFaction();
-			if(!this.isValid(oFaction))
-				return;
-			Rel relation = faction.getRelationTo(oFaction);
-			if(!this.disband.getTypes().contains(relation))
-				return;
-			for(UPlayer player:oFaction.getUPlayersWhereOnline(true)){
-				Rel rel = player.getRelationTo(oFaction);
-				if(this.disband.getReceivers().contains(rel))
-					player.sendMessage(this.disband.getAlert(relation));
-				defensiveCopy.remove(player.getPlayer());
-			}
-		}
-	}*/
 
 	public static boolean isValid(final Faction faction){
 		return (faction != null) && !faction.isNone() && !faction.isSafeZone() && !faction.isWarZone();
