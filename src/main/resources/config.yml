@@ -7,6 +7,7 @@ Faction Nameplate:
     Format: '%f'
 Teleport:
   Enabled: true
+  Cooldown: 0
   Types:
     - ENEMY
   Enemy Alert Message: '&4An enemy has teleported into your land!'
@@ -14,6 +15,7 @@ Teleport:
   Ally Alert Message: '&4An ally has teleported into your land!'
 Move:
   Enabled: false
+  Cooldown: 0
   Types:
     - ENEMY
   Enemy Alert Message: '&4An enemy has entered your land!'
@@ -21,4 +23,5 @@ Move:
   Ally Alert Message: '&4An ally has entered your land!'
 Member Death:
   Enabled: false
+  Cooldown: 0
   Member Alert Message: '&4%n has died!'

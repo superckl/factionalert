@@ -38,6 +38,8 @@ public class FactionListeners implements Listener{
 		final Relation relation = faction.getRelationTo(oFaction);
 		if(!this.teleport.getTypes().contains(relation))
 			return;
+		if(!this.teleport.cooldown(e.getPlayer().getName()))
+				return;
 		for(final FPlayer player:faction.getFPlayersWhereOnline(true)){
 			player.sendMessage(this.teleport.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getTag()));
 		}
@@ -60,6 +62,8 @@ public class FactionListeners implements Listener{
 		final Relation relation = faction.getRelationTo(oFaction);
 		if(!this.move.getTypes().contains(relation))
 			return;
+		if(!this.move.cooldown(e.getPlayer().getName()))
+			return;
 		for(final FPlayer player:faction.getFPlayersWhereOnline(true)){
 			player.sendMessage(this.move.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getTag()));
 		}
@@ -73,6 +77,8 @@ public class FactionListeners implements Listener{
   			return;
 		final Faction faction = FPlayers.i.get(e.getEntity()).getFaction();
 		if(!FactionListeners.isValid(faction))
+			return;
+		if(!this.death.cooldown(e.getEntity().getName()))
 			return;
 		for(final FPlayer player:faction.getFPlayersWhereOnline(true)){
 			player.sendMessage(this.death.getAlert().replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getTag()));
