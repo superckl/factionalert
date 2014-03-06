@@ -9,16 +9,19 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
 
 import com.massivecraft.factions.Rel;
 
 public class FactionAlert extends JavaPlugin{
 
 	private final String[] configEntries = new String[] {"Teleport", "Move"};
+	private Scoreboard scoreboard;
 
 	@Override
 	public void onEnable(){
 		this.saveDefaultConfig();
+		this.scoreboard = this.getServer().getScoreboardManager().getNewScoreboard();
 		this.readConfig();
 		this.getLogger().info("FactionAlert enabled!");
 	}
@@ -70,7 +73,8 @@ public class FactionAlert extends JavaPlugin{
 			final String ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")));
 			final String neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")));
 			final String truce = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Truce Alert Message")));
-			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, truce, types, receivers);
+			final int timeout = c.getInt(entry.concat(".Cooldown"), 0);
+			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, truce, types, receivers, timeout, this);
 		}
 		final boolean enabled = c.getBoolean("Member Death.Enabled");
 		final List<String> receiverStrings = c.getStringList("Member Death.Receivers");
@@ -87,7 +91,8 @@ public class FactionAlert extends JavaPlugin{
 		final String officer = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Officer Alert Message"));
 		final String member = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message"));
 		final String recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message"));
-		final FactionSpecificAlertGroup death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers);
+		final int timeout = c.getInt("Member Death.Cooldown", 0);
+		final FactionSpecificAlertGroup death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers, timeout, this);
 		this.getServer().getPluginManager().registerEvents(new FactionListeners(alertGroups[0], alertGroups[1], death), this);
 
 		final boolean prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
@@ -95,7 +100,7 @@ public class FactionAlert extends JavaPlugin{
 		final boolean suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
 		final String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format"));
 		if(suffix || prefix)
-			this.getServer().getPluginManager().registerEvents(new NameplateManager(this.getServer().getScoreboardManager().getNewScoreboard(), suffix, prefix, suffixFormat, prefixFormat), this);
+			this.getServer().getPluginManager().registerEvents(new NameplateManager(this.scoreboard, suffix, prefix, suffixFormat, prefixFormat), this);
 	}
 
 }

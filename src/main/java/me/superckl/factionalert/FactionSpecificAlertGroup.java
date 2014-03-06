@@ -1,13 +1,17 @@
 package me.superckl.factionalert;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import lombok.AllArgsConstructor;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import com.massivecraft.factions.Rel;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FactionSpecificAlertGroup {
 
 	@Getter
@@ -22,6 +26,25 @@ public class FactionSpecificAlertGroup {
 	private final String member;
 	@Getter
 	private final List<Rel> receivers;
+	@Getter
+	private final int cooldown;
+	@Getter
+	private final FactionAlert instance;
+	private final Set<String> cooldowns = new HashSet<String>();
+	
+	public boolean cooldown(final String name){
+		if(this.cooldowns.contains(name))
+			return false;
+		if(this.cooldown <= 0)
+			return true;
+		this.cooldowns.add(name);
+		new BukkitRunnable() {
+			public void run() {
+				FactionSpecificAlertGroup.this.cooldowns.remove(name);
+			}
+		}.runTaskLater(this.instance, this.cooldown);
+		return true;
+	}
 
 	public String getAlert(final Rel rel){
 		if(rel == Rel.LEADER)
