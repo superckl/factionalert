@@ -12,10 +12,10 @@ import org.bukkit.event.HandlerList;
 public class ReloadCommand extends FACommand{
 
 	private final FactionAlert instance;
-	
+
 	@Override
-	public boolean execute(CommandSender sender, Command command, String label,
-			String[] args) {
+	public boolean execute(final CommandSender sender, final Command command, final String label,
+			final String[] args) {
 		if(!sender.hasPermission("factionalert.reload")){
 			sender.sendMessage(ChatColor.RED+"You don't have permission to do that.");
 			return false;

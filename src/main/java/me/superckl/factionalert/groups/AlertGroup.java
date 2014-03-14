@@ -12,6 +12,6 @@ public abstract class AlertGroup {
 	@Getter
 	@Setter(onParam = @_({@NonNull}))
 	private Set<String> excludes = new HashSet<String>();
-	
-	
+
+
 }

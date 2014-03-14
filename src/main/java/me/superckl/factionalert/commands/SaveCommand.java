@@ -14,18 +14,18 @@ import org.bukkit.command.CommandSender;
 public class SaveCommand extends FACommand{
 
 	private final FactionAlert instance;
-	
+
 	@Override
-	public boolean execute(CommandSender sender, Command command, String label,
-			String[] args) {
+	public boolean execute(final CommandSender sender, final Command command, final String label,
+			final String[] args) {
 		if(!sender.hasPermission("factionalert.save")){
 			sender.sendMessage(ChatColor.RED+"Youdon't have permission to do that.");
 			return false;
 		}
 		try {
-			instance.getListeners().saveExcludes(new File(this.instance.getDataFolder(), "excludes.yml"));
+			this.instance.getListeners().saveExcludes(new File(this.instance.getDataFolder(), "excludes.yml"));
 			sender.sendMessage(ChatColor.GREEN+"All data has been saved.");
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			sender.sendMessage(ChatColor.RED+"Something went wrong! Please notify the author.");
 			e.printStackTrace();
 		}

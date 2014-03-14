@@ -106,11 +106,11 @@ public class FactionListeners implements Listener{
 				player.sendMessage(this.death.getAlert(relation).replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getName()));
 		}
 	}
-	
-	public void saveExcludes(@NonNull File toSave) throws IOException{
+
+	public void saveExcludes(@NonNull final File toSave) throws IOException{
 		if(!toSave.exists())
 			toSave.createNewFile();
-		YamlConfiguration config = new YamlConfiguration();
+		final YamlConfiguration config = new YamlConfiguration();
 		config.set("death", new ArrayList<String>(this.death.getExcludes()));
 		config.set("move", new ArrayList<String>(this.move.getExcludes()));
 		config.set("teleport", new ArrayList<String>(this.teleport.getExcludes()));
@@ -120,7 +120,7 @@ public class FactionListeners implements Listener{
 	public AlertGroup[] getAlertGroups(){
 		return new AlertGroup[] {this.teleport, this.move, this.death};
 	}
-	
+
 	public static boolean isValid(@NonNull final Faction faction){
 		return (faction != null) && !faction.isNone() && !faction.getId().equals(UConf.get(faction).factionIdSafezone) && !faction.getId().equals(UConf.get(faction).factionIdWarzone);
 	}

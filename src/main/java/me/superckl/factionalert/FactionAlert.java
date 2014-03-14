@@ -49,7 +49,7 @@ public class FactionAlert extends JavaPlugin{
 		this.scoreboard = this.getServer().getScoreboardManager().getNewScoreboard();
 		this.fillCommands();
 		this.readConfig();
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "excludes.yml"));
+		final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "excludes.yml"));
 		if(config != null){
 			this.listeners.getDeath().setExcludes(new HashSet<String>(config.getStringList("death")));
 			this.listeners.getMove().setExcludes(new HashSet<String>(config.getStringList("move")));
@@ -57,28 +57,28 @@ public class FactionAlert extends JavaPlugin{
 		}
 		this.getLogger().info("FactionAlert enabled!");
 	}
-	
+
 	@Override
 	public void onDisable(){
 		try {
 			this.listeners.saveExcludes(new File(this.getDataFolder(), "excludes.yml"));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void fillCommands(){
 		this.baseCommands.clear();
-		FACommand[] commands = {new AlertsCommand(this), new ReloadCommand(this)};
-		for(FACommand command:commands)
-			for(String alias:command.getAliases())
+		final FACommand[] commands = {new AlertsCommand(this), new ReloadCommand(this)};
+		for(final FACommand command:commands)
+			for(final String alias:command.getAliases())
 				this.baseCommands.put(alias, command);
 	}
-	
+
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args){
 		FACommand faCommand;
-		if(args.length <= 0 || (faCommand = this.baseCommands.get(args[0].toLowerCase())) == null){
+		if((args.length <= 0) || ((faCommand = this.baseCommands.get(args[0].toLowerCase())) == null)){
 			sender.sendMessage(ChatColor.RED+"Invalid arguments");
 			return false;
 		}

@@ -4,11 +4,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import me.superckl.factionalert.FactionAlert;
+
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.massivecraft.factions.Rel;
 
@@ -35,8 +36,8 @@ public class SimpleAlertGroup extends AlertGroup{
 	private final FactionAlert instance;
 	@Getter
 	private final Set<String> cooldowns = new HashSet<String>();
-	
-	public boolean cooldown(final String name){
+
+	public boolean cooldown(@NonNull final String name){
 		if(this.cooldowns.contains(name))
 			return false;
 		if(this.cooldown <= 0)
