@@ -1,7 +1,17 @@
 package me.superckl.factionalert;
 
-import lombok.AllArgsConstructor;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import me.superckl.factionalert.groups.AlertGroup;
+import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
+import me.superckl.factionalert.groups.SimpleAlertGroup;
+
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,8 +29,11 @@ import com.massivecraft.factions.struct.Relation;
 @AllArgsConstructor
 public class FactionListeners implements Listener{
 
+	@Getter
 	private final SimpleAlertGroup teleport;
+	@Getter
 	private final SimpleAlertGroup move;
+	@Getter
 	private final FactionSpecificAlertGroup death;
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -28,7 +41,7 @@ public class FactionListeners implements Listener{
 		if(!this.teleport.isEnabled())
 			return;
 		if(e.getPlayer().hasPermission("factionalert.noalert.teleport"))
-  			return;
+			return;
 		final Faction faction = Board.getFactionAt(new FLocation(e.getTo()));
 		if(!FactionListeners.isValid(faction))
 			return;
@@ -39,18 +52,18 @@ public class FactionListeners implements Listener{
 		if(!this.teleport.getTypes().contains(relation))
 			return;
 		if(!this.teleport.cooldown(e.getPlayer().getName()))
-				return;
-		for(final FPlayer player:faction.getFPlayersWhereOnline(true)){
-			player.sendMessage(this.teleport.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getTag()));
-		}
+			return;
+		for(final FPlayer player:faction.getFPlayersWhereOnline(true))
+			if(!this.teleport.getExcludes().contains(player.getName()))
+				player.sendMessage(this.teleport.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getTag()));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerMove(final PlayerMoveEvent e){
-		if(!this.move.isEnabled() || e instanceof PlayerTeleportEvent)
+		if(!this.move.isEnabled() || (e instanceof PlayerTeleportEvent))
 			return;
 		if(e.getPlayer().hasPermission("factionalert.noalert.move"))
-  			return;
+			return;
 		final Faction faction = Board.getFactionAt(new FLocation(e.getTo()));
 		if(Board.getFactionAt(new FLocation(e.getFrom())).getId().equals(faction.getId()))
 			return;
@@ -64,9 +77,9 @@ public class FactionListeners implements Listener{
 			return;
 		if(!this.move.cooldown(e.getPlayer().getName()))
 			return;
-		for(final FPlayer player:faction.getFPlayersWhereOnline(true)){
-			player.sendMessage(this.move.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getTag()));
-		}
+		for(final FPlayer player:faction.getFPlayersWhereOnline(true))
+			if(!this.move.getExcludes().contains(player.getName()))
+				player.sendMessage(this.move.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getTag()));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -74,18 +87,33 @@ public class FactionListeners implements Listener{
 		if(!this.death.isEnabled())
 			return;
 		if(e.getEntity().hasPermission("factionalert.noalert.death"))
-  			return;
+			return;
 		final Faction faction = FPlayers.i.get(e.getEntity()).getFaction();
 		if(!FactionListeners.isValid(faction))
 			return;
 		if(!this.death.cooldown(e.getEntity().getName()))
 			return;
-		for(final FPlayer player:faction.getFPlayersWhereOnline(true)){
-			player.sendMessage(this.death.getAlert().replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getTag()));
-		}
+		for(final FPlayer player:faction.getFPlayersWhereOnline(true))
+			if(!this.death.getExcludes().contains(player.getName()))
+				player.sendMessage(this.death.getAlert().replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getTag()));
 	}
 
-	public static boolean isValid(final Faction faction){
+
+	public void saveExcludes(@NonNull final File toSave) throws IOException{
+		if(!toSave.exists())
+			toSave.createNewFile();
+		final YamlConfiguration config = new YamlConfiguration();
+		config.set("death", new ArrayList<String>(this.death.getExcludes()));
+		config.set("move", new ArrayList<String>(this.move.getExcludes()));
+		config.set("teleport", new ArrayList<String>(this.teleport.getExcludes()));
+		config.save(toSave);
+	}
+
+	public AlertGroup[] getAlertGroups(){
+		return new AlertGroup[] {this.teleport, this.move, this.death};
+	}
+
+	public static boolean isValid(@NonNull final Faction faction){
 		return (faction != null) && !faction.isNone() && !faction.isSafeZone() && !faction.isWarZone();
 	}
 

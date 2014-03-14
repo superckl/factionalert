@@ -1,6 +1,7 @@
 package me.superckl.factionalert;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -31,7 +32,7 @@ public class NameplateManager implements Listener{
 		if(!this.prefix && !this.suffix)
 			return;
 		if(e.getPlayer().hasPermission("factionalert.noalert.nameplate"))
-  			return;
+			return;
 		e.getPlayer().setScoreboard(this.scoreboard);
 		final Faction faction = FPlayers.i.get(e.getPlayer()).getFaction();
 		if(!FactionListeners.isValid(faction))
@@ -56,7 +57,7 @@ public class NameplateManager implements Listener{
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerLeaveFaction(FPlayerLeaveEvent e){
+	public void onPlayerLeaveFaction(final FPlayerLeaveEvent e){
 		OfflinePlayer player = e.getFPlayer().getPlayer();
 		if(player == null)
 			player = Bukkit.getOfflinePlayer(e.getFPlayer().getName());
@@ -67,11 +68,11 @@ public class NameplateManager implements Listener{
 			return;
 		team.removePlayer(e.getFPlayer().getPlayer());
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerJoinFaction(FPlayerJoinEvent e){
+	public void onPlayerJoinFaction(final FPlayerJoinEvent e){
 		if(e.getFPlayer().getPlayer().hasPermission("factionalert.noalert.nameplate"))
-  			return;
+			return;
 		Team team = this.scoreboard.getTeam(e.getFaction().getTag());
 		if(team == null){
 			team = this.scoreboard.registerNewTeam(e.getFaction().getTag());
@@ -83,7 +84,7 @@ public class NameplateManager implements Listener{
 		team.addPlayer(e.getFPlayer().getPlayer());
 	}
 
-	private String format(final String format, String name){
+	private String format(@NonNull final String format, @NonNull String name){
 		final int newLength = (format.length()-2)+name.length();
 		if(newLength > 16)
 			name = name.substring(0, name.length()-(newLength-16));
