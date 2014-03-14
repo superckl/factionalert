@@ -1,6 +1,7 @@
 package me.superckl.factionalert;
 
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -83,7 +84,7 @@ public class NameplateManager implements Listener{
 		}
 	}
 
-	private String format(final String format, String name){
+	private String format(@NonNull final String format, @NonNull String name){
 		final int newLength = (format.length()-2)+name.length();
 		if(newLength > 16)
 			name = name.substring(0, name.length()-(newLength-16));

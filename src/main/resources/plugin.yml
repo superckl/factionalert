@@ -1,6 +1,6 @@
 name: FactionAlert
 main: me.superckl.factionalert.FactionAlert
-version: 0.25-Beta
+version: 0.3-Beta
 author: superckl
 depend: [Factions]
 commands:

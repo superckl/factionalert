@@ -1,13 +1,28 @@
 package me.superckl.factionalert;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import me.superckl.factionalert.commands.AlertsCommand;
+import me.superckl.factionalert.commands.FACommand;
+import me.superckl.factionalert.commands.ReloadCommand;
+import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
+import me.superckl.factionalert.groups.SimpleAlertGroup;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.HandlerList;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -15,32 +30,59 @@ import com.massivecraft.factions.Rel;
 
 public class FactionAlert extends JavaPlugin{
 
-	private final String[] configEntries = new String[] {"Teleport", "Move"};
+	@Getter
+	@Setter(onParam = @_({@NonNull}))
+	private String[] configEntries = new String[] {"Teleport", "Move"};
+	@Getter
+	@Setter(onParam = @_({@NonNull}))
+	private Map<String, FACommand> baseCommands = new HashMap<String, FACommand>();
+	@Getter
 	private Scoreboard scoreboard;
+	@Getter
+	private FactionListeners listeners;
+	@Getter
+	private NameplateManager manager;
 
 	@Override
 	public void onEnable(){
 		this.saveDefaultConfig();
 		this.scoreboard = this.getServer().getScoreboardManager().getNewScoreboard();
+		this.fillCommands();
 		this.readConfig();
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "excludes.yml"));
+		if(config != null){
+			this.listeners.getDeath().setExcludes(new HashSet<String>(config.getStringList("death")));
+			this.listeners.getMove().setExcludes(new HashSet<String>(config.getStringList("move")));
+			this.listeners.getTeleport().setExcludes(new HashSet<String>(config.getStringList("teleport")));
+		}
 		this.getLogger().info("FactionAlert enabled!");
 	}
+	
+	@Override
+	public void onDisable(){
+		try {
+			this.listeners.saveExcludes(new File(this.getDataFolder(), "excludes.yml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
+	public void fillCommands(){
+		this.baseCommands.clear();
+		FACommand[] commands = {new AlertsCommand(this), new ReloadCommand(this)};
+		for(FACommand command:commands)
+			for(String alias:command.getAliases())
+				this.baseCommands.put(alias, command);
+	}
+	
 	@Override
 	public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args){
-		if(!sender.hasPermission("factionalert.manage")){
-			sender.sendMessage(ChatColor.RED+"You don't have permission to do that.");
-			return false;
-		}
-		if((args.length != 1) || !args[0].equalsIgnoreCase("reload")){
+		FACommand faCommand;
+		if(args.length <= 0 || (faCommand = this.baseCommands.get(args[0].toLowerCase())) == null){
 			sender.sendMessage(ChatColor.RED+"Invalid arguments");
 			return false;
 		}
-		this.reloadConfig();
-		HandlerList.unregisterAll(this);
-		this.readConfig();
-		sender.sendMessage(ChatColor.GREEN+"FactionAlert reloaded.");
-		return true;
+		return faCommand.execute(sender, command, label, Arrays.copyOfRange(args, 1, args.length));
 	}
 
 	public void readConfig(){
@@ -93,14 +135,17 @@ public class FactionAlert extends JavaPlugin{
 		final String recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message"));
 		final int timeout = c.getInt("Member Death.Cooldown", 0);
 		final FactionSpecificAlertGroup death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers, timeout, this);
-		this.getServer().getPluginManager().registerEvents(new FactionListeners(alertGroups[0], alertGroups[1], death), this);
+		this.listeners = new FactionListeners(alertGroups[0], alertGroups[1], death);
+		this.getServer().getPluginManager().registerEvents(this.listeners, this);
 
 		final boolean prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
 		final String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format"));
 		final boolean suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
 		final String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format"));
-		if(suffix || prefix)
-			this.getServer().getPluginManager().registerEvents(new NameplateManager(this.scoreboard, suffix, prefix, suffixFormat, prefixFormat), this);
+		if(suffix || prefix){
+			this.manager = new NameplateManager(this.scoreboard, suffix, prefix, suffixFormat, prefixFormat);
+			this.getServer().getPluginManager().registerEvents(this.manager, this);
+		}
 	}
 
 }

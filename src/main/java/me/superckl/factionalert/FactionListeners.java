@@ -1,7 +1,17 @@
 package me.superckl.factionalert;
 
-import lombok.AllArgsConstructor;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+import me.superckl.factionalert.groups.AlertGroup;
+import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
+import me.superckl.factionalert.groups.SimpleAlertGroup;
+
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,8 +29,11 @@ import com.massivecraft.mcore.ps.PS;
 @AllArgsConstructor
 public class FactionListeners implements Listener{
 
+	@Getter
 	private final SimpleAlertGroup teleport;
+	@Getter
 	private final SimpleAlertGroup move;
+	@Getter
 	private final FactionSpecificAlertGroup death;
 	//private final AlertGroup disband;
 
@@ -43,7 +56,7 @@ public class FactionListeners implements Listener{
 			return;
 		for(final UPlayer player:faction.getUPlayersWhereOnline(true)){
 			final Rel rel = player.getRelationTo(faction);
-			if(this.teleport.getReceivers().contains(rel))
+			if(this.teleport.getReceivers().contains(rel) && !this.teleport.getExcludes().contains(player.getName()))
 				player.sendMessage(this.teleport.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getName()));
 		}
 	}
@@ -69,7 +82,7 @@ public class FactionListeners implements Listener{
 			return;
 		for(final UPlayer player:faction.getUPlayersWhereOnline(true)){
 			final Rel rel = player.getRelationTo(faction);
-			if(this.move.getReceivers().contains(rel))
+			if(this.move.getReceivers().contains(rel) && !this.move.getExcludes().contains(player.getName()))
 				player.sendMessage(this.move.getAlert(relation).replaceAll("%n", e.getPlayer().getName()).replaceAll("%f", oFaction.getName()));
 		}
 	}
@@ -89,12 +102,26 @@ public class FactionListeners implements Listener{
 			if(player.getName().equals(e.getEntity().getName()))
 				continue;
 			final Rel relation = player.getRelationTo(faction);
-			if(this.death.getReceivers().contains(relation))
+			if(this.death.getReceivers().contains(relation) && !this.death.getExcludes().contains(player.getName()))
 				player.sendMessage(this.death.getAlert(relation).replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getName()));
 		}
 	}
+	
+	public void saveExcludes(@NonNull File toSave) throws IOException{
+		if(!toSave.exists())
+			toSave.createNewFile();
+		YamlConfiguration config = new YamlConfiguration();
+		config.set("death", new ArrayList<String>(this.death.getExcludes()));
+		config.set("move", new ArrayList<String>(this.move.getExcludes()));
+		config.set("teleport", new ArrayList<String>(this.teleport.getExcludes()));
+		config.save(toSave);
+	}
 
-	public static boolean isValid(final Faction faction){
+	public AlertGroup[] getAlertGroups(){
+		return new AlertGroup[] {this.teleport, this.move, this.death};
+	}
+	
+	public static boolean isValid(@NonNull final Faction faction){
 		return (faction != null) && !faction.isNone() && !faction.getId().equals(UConf.get(faction).factionIdSafezone) && !faction.getId().equals(UConf.get(faction).factionIdWarzone);
 	}
 

@@ -4,7 +4,7 @@
 
   <groupId>me.superckl</groupId>
   <artifactId>factionalert</artifactId>
-  <version>0.25-beta</version>
+  <version>0.3-beta</version>
   <packaging>jar</packaging>
 
   <name>factionalert</name>
@@ -27,7 +27,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.7.2-R0.3-SNAPSHOT</version>
+      <version>1.7.2-R0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.massivecraft</groupId>
@@ -42,7 +42,7 @@
     <dependency>
 		<groupId>org.projectlombok</groupId>
 		<artifactId>lombok</artifactId>
-		<version>1.12.2</version>
+		<version>1.12.6</version>
 		<scope>provided</scope>
 	</dependency>
     <dependency>

@@ -1,4 +1,4 @@
-package me.superckl.factionalert;
+package me.superckl.factionalert.groups;
 
 import java.util.HashSet;
 import java.util.List;
@@ -7,25 +7,25 @@ import java.util.Set;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import me.superckl.factionalert.FactionAlert;
 
 import com.massivecraft.factions.Rel;
 
 @RequiredArgsConstructor
-public class SimpleAlertGroup {
+public class FactionSpecificAlertGroup extends AlertGroup{
 
 	@Getter
 	private final boolean enabled;
 	@Getter
-	private final String enemy;
+	private final String leader;
 	@Getter
-	private final String ally;
+	private final String officer;
 	@Getter
-	private final String neutral;
+	private final String recruit;
 	@Getter
-	private final String truce;
-	@Getter
-	private final List<Rel> types;
+	private final String member;
 	@Getter
 	private final List<Rel> receivers;
 	@Getter
@@ -34,8 +34,7 @@ public class SimpleAlertGroup {
 	private final FactionAlert instance;
 	private final Set<String> cooldowns = new HashSet<String>();
 	
-	public boolean cooldown(final String name){
-		System.out.println(this.cooldown);
+	public boolean cooldown(@NonNull final String name){
 		if(this.cooldowns.contains(name))
 			return false;
 		if(this.cooldown <= 0)
@@ -43,21 +42,21 @@ public class SimpleAlertGroup {
 		this.cooldowns.add(name);
 		new BukkitRunnable() {
 			public void run() {
-				SimpleAlertGroup.this.cooldowns.remove(name);
+				FactionSpecificAlertGroup.this.cooldowns.remove(name);
 			}
 		}.runTaskLater(this.instance, this.cooldown);
 		return true;
 	}
 
 	public String getAlert(final Rel rel){
-		if(rel == Rel.ENEMY)
-			return this.enemy;
-		else if(rel == Rel.ALLY)
-			return this.ally;
-		else if(rel == Rel.TRUCE)
-			return this.truce;
+		if(rel == Rel.LEADER)
+			return this.leader;
+		else if(rel == Rel.OFFICER)
+			return this.officer;
+		else if(rel == Rel.MEMBER)
+			return this.member;
 		else
-			return this.neutral;
+			return this.recruit;
 	}
 
 }

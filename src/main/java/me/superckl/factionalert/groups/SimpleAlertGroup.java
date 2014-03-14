@@ -1,4 +1,4 @@
-package me.superckl.factionalert;
+package me.superckl.factionalert.groups;
 
 import java.util.HashSet;
 import java.util.List;
@@ -8,28 +8,32 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.superckl.factionalert.FactionAlert;
 
 import com.massivecraft.factions.Rel;
 
 @RequiredArgsConstructor
-public class FactionSpecificAlertGroup {
+public class SimpleAlertGroup extends AlertGroup{
 
 	@Getter
 	private final boolean enabled;
 	@Getter
-	private final String leader;
+	private final String enemy;
 	@Getter
-	private final String officer;
+	private final String ally;
 	@Getter
-	private final String recruit;
+	private final String neutral;
 	@Getter
-	private final String member;
+	private final String truce;
+	@Getter
+	private final List<Rel> types;
 	@Getter
 	private final List<Rel> receivers;
 	@Getter
 	private final int cooldown;
 	@Getter
 	private final FactionAlert instance;
+	@Getter
 	private final Set<String> cooldowns = new HashSet<String>();
 	
 	public boolean cooldown(final String name){
@@ -40,21 +44,21 @@ public class FactionSpecificAlertGroup {
 		this.cooldowns.add(name);
 		new BukkitRunnable() {
 			public void run() {
-				FactionSpecificAlertGroup.this.cooldowns.remove(name);
+				SimpleAlertGroup.this.cooldowns.remove(name);
 			}
 		}.runTaskLater(this.instance, this.cooldown);
 		return true;
 	}
 
 	public String getAlert(final Rel rel){
-		if(rel == Rel.LEADER)
-			return this.leader;
-		else if(rel == Rel.OFFICER)
-			return this.officer;
-		else if(rel == Rel.MEMBER)
-			return this.member;
+		if(rel == Rel.ENEMY)
+			return this.enemy;
+		else if(rel == Rel.ALLY)
+			return this.ally;
+		else if(rel == Rel.TRUCE)
+			return this.truce;
 		else
-			return this.recruit;
+			return this.neutral;
 	}
 
 }
