@@ -1,7 +1,7 @@
 package me.superckl.factionalert;
 
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
+import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -18,6 +18,7 @@ import com.massivecraft.factions.entity.UPlayer;
 import com.massivecraft.factions.event.FactionsEventMembershipChange;
 import com.massivecraft.factions.event.FactionsEventMembershipChange.MembershipChangeReason;
 
+@ExtensionMethod({Utilities.class})
 @AllArgsConstructor
 public class NameplateManager implements Listener{
 
@@ -35,15 +36,15 @@ public class NameplateManager implements Listener{
 			return;
 		e.getPlayer().setScoreboard(this.scoreboard);
 		final Faction faction = UPlayer.get(e.getPlayer()).getFaction();
-		if(!FactionListeners.isValid(faction))
+		if(!faction.isValid())
 			return;
 		Team team = NameplateManager.this.scoreboard.getTeam(faction.getName());
 		if(team == null){
 			team = this.scoreboard.registerNewTeam(faction.getName());
 			if(this.suffix)
-				team.setSuffix(this.format(this.suffixFormat, faction.getName()));
+				team.setSuffix(this.suffixFormat.formatNameplate(faction.getName()));
 			if(this.prefix)
-				team.setPrefix(this.format(this.prefixFormat, faction.getName()));
+				team.setPrefix(this.prefixFormat.formatNameplate(faction.getName()));
 		}
 		team.addPlayer(e.getPlayer());
 	}
@@ -66,9 +67,9 @@ public class NameplateManager implements Listener{
 			if(team == null){
 				team = this.scoreboard.registerNewTeam(e.getNewFaction().getName());
 				if(this.suffix)
-					team.setSuffix(this.format(this.suffixFormat, e.getNewFaction().getName()));
+					team.setSuffix(this.suffixFormat.formatNameplate(e.getNewFaction().getName()));
 				if(this.prefix)
-					team.setPrefix(this.format(this.prefixFormat, e.getNewFaction().getName()));
+					team.setPrefix(this.prefixFormat.formatNameplate(e.getNewFaction().getName()));
 			}
 			team.addPlayer(e.getUPlayer().getPlayer());
 		}else if((r == MembershipChangeReason.DISBAND) || (r == MembershipChangeReason.KICK) || (r == MembershipChangeReason.LEAVE)){
@@ -84,10 +85,4 @@ public class NameplateManager implements Listener{
 		}
 	}
 
-	private String format(@NonNull final String format, @NonNull String name){
-		final int newLength = (format.length()-2)+name.length();
-		if(newLength > 16)
-			name = name.substring(0, name.length()-(newLength-16));
-		return format.replace("%f", name);
-	}
 }
