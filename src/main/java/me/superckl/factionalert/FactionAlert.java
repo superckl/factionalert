@@ -2,8 +2,10 @@ package me.superckl.factionalert;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,12 +45,24 @@ public class FactionAlert extends JavaPlugin{
 	private FactionListeners listeners;
 	@Getter
 	private NameplateManager manager;
+	@Getter
+	private VersionChecker versionChecker;
 
 	@Override
 	public void onEnable(){
 		this.saveDefaultConfig();
+		if(this.getConfig().getBoolean("Version Check")){
+			this.getLogger().info("Starting version check...");
+			this.versionChecker = VersionChecker.start(0.31d, this);
+			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
+		}
+		this.getLogger().info("Registering scoreboard");
+		if(this.checkScoreboardConflicts(1))
+			this.getLogger().warning("Other plugins have registered scoreboards! Conflicts may occur if nameplates are modified.");
 		this.scoreboard = this.getServer().getScoreboardManager().getNewScoreboard();
+		this.getLogger().info("Instantiating commands...");
 		this.fillCommands();
+		this.getLogger().info("Reading configuration...");
 		this.readConfig();
 		final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "excludes.yml"));
 		if(config != null){
@@ -67,6 +81,24 @@ public class FactionAlert extends JavaPlugin{
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean checkScoreboardConflicts(final int tolerance){
+		try {
+			final Field f = this.getServer().getScoreboardManager().getClass().getDeclaredField("scoreboards");
+			if(f == null){
+				this.getLogger().warning("Failed to check for scoreboard conflicts!");
+				return false;
+			}
+			f.setAccessible(true);
+			final Collection<?> boards = (Collection<?>) f.get(this.getServer().getScoreboardManager());
+			if(boards.size() > tolerance)
+				return true;
+		} catch (final Throwable t) {
+			this.getLogger().warning("Failed to check for scoreboard conflicts!");
+			t.printStackTrace();
+		}
+		return false;
 	}
 
 	public void fillCommands(){

@@ -1,7 +1,7 @@
 package me.superckl.factionalert;
 
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
+import lombok.experimental.ExtensionMethod;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -18,6 +18,7 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.event.FPlayerLeaveEvent;
 
+@ExtensionMethod({Utilities.class})
 @AllArgsConstructor
 public class NameplateManager implements Listener{
 
@@ -35,15 +36,15 @@ public class NameplateManager implements Listener{
 			return;
 		e.getPlayer().setScoreboard(this.scoreboard);
 		final Faction faction = FPlayers.i.get(e.getPlayer()).getFaction();
-		if(!FactionListeners.isValid(faction))
+		if(!faction.isValid())
 			return;
 		Team team = NameplateManager.this.scoreboard.getTeam(faction.getTag());
 		if(team == null){
 			team = this.scoreboard.registerNewTeam(faction.getTag());
 			if(this.suffix)
-				team.setSuffix(this.format(this.suffixFormat, faction.getTag()));
+				team.setSuffix(this.suffixFormat.formatNameplate(faction.getTag()));
 			if(this.prefix)
-				team.setPrefix(this.format(this.prefixFormat, faction.getTag()));
+				team.setPrefix(this.prefixFormat.formatNameplate(faction.getTag()));
 		}
 		team.addPlayer(e.getPlayer());
 	}
@@ -77,17 +78,10 @@ public class NameplateManager implements Listener{
 		if(team == null){
 			team = this.scoreboard.registerNewTeam(e.getFaction().getTag());
 			if(this.suffix)
-				team.setSuffix(this.format(this.suffixFormat, e.getFaction().getTag()));
+				team.setSuffix(this.suffixFormat.formatNameplate(e.getFaction().getTag()));
 			if(this.prefix)
-				team.setPrefix(this.format(this.prefixFormat, e.getFaction().getTag()));
+				team.setPrefix(this.prefixFormat.formatNameplate(e.getFaction().getTag()));
 		}
 		team.addPlayer(e.getFPlayer().getPlayer());
-	}
-
-	private String format(@NonNull final String format, @NonNull String name){
-		final int newLength = (format.length()-2)+name.length();
-		if(newLength > 16)
-			name = name.substring(0, name.length()-(newLength-16));
-		return format.replace("%f", name);
 	}
 }

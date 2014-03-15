@@ -4,11 +4,11 @@
 
   <groupId>me.superckl</groupId>
   <artifactId>factionalert</artifactId>
-  <version>0.3-beta</version>
+  <version>0.31-beta</version>
   <packaging>jar</packaging>
 
   <name>factionalert</name>
-  <url>http://maven.apache.org</url>
+  <url>http://dev.bukkit.org/bukkit-plugins/factionalert/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,7 +19,7 @@
   <repositories>
     <repository>
       <id>bukkit-repo</id>
-        <url>http://repo.bukkit.org/content/groups/public/</url>
+      <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
   </repositories>
   
@@ -35,10 +35,10 @@
       <version>1.6.9.4</version>
     </dependency>
     <dependency>
-		<groupId>org.projectlombok</groupId>
-		<artifactId>lombok</artifactId>
-		<version>1.12.6</version>
-		<scope>provided</scope>
+      <groupId>org.projectlombok</groupId>
+	  <artifactId>lombok</artifactId>
+	  <version>1.12.6</version>
+	  <scope>provided</scope>
 	</dependency>
     <dependency>
       <groupId>junit</groupId>

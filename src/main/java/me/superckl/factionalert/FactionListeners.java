@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.experimental.ExtensionMethod;
 import me.superckl.factionalert.groups.AlertGroup;
 import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
 import me.superckl.factionalert.groups.SimpleAlertGroup;
@@ -26,6 +27,7 @@ import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Relation;
 
+@ExtensionMethod({Utilities.class})
 @AllArgsConstructor
 public class FactionListeners implements Listener{
 
@@ -43,10 +45,10 @@ public class FactionListeners implements Listener{
 		if(e.getPlayer().hasPermission("factionalert.noalert.teleport"))
 			return;
 		final Faction faction = Board.getFactionAt(new FLocation(e.getTo()));
-		if(!FactionListeners.isValid(faction))
+		if(!faction.isValid())
 			return;
 		final Faction oFaction = FPlayers.i.get(e.getPlayer()).getFaction();
-		if(!FactionListeners.isValid(oFaction))
+		if(!oFaction.isValid())
 			return;
 		final Relation relation = faction.getRelationTo(oFaction);
 		if(!this.teleport.getTypes().contains(relation))
@@ -67,10 +69,10 @@ public class FactionListeners implements Listener{
 		final Faction faction = Board.getFactionAt(new FLocation(e.getTo()));
 		if(Board.getFactionAt(new FLocation(e.getFrom())).getId().equals(faction.getId()))
 			return;
-		if(!FactionListeners.isValid(faction))
+		if(!faction.isValid())
 			return;
 		final Faction oFaction = FPlayers.i.get(e.getPlayer()).getFaction();
-		if(!FactionListeners.isValid(oFaction))
+		if(!oFaction.isValid())
 			return;
 		final Relation relation = faction.getRelationTo(oFaction);
 		if(!this.move.getTypes().contains(relation))
@@ -89,7 +91,7 @@ public class FactionListeners implements Listener{
 		if(e.getEntity().hasPermission("factionalert.noalert.death"))
 			return;
 		final Faction faction = FPlayers.i.get(e.getEntity()).getFaction();
-		if(!FactionListeners.isValid(faction))
+		if(!faction.isValid())
 			return;
 		if(!this.death.cooldown(e.getEntity().getName()))
 			return;
@@ -111,10 +113,6 @@ public class FactionListeners implements Listener{
 
 	public AlertGroup[] getAlertGroups(){
 		return new AlertGroup[] {this.teleport, this.move, this.death};
-	}
-
-	public static boolean isValid(@NonNull final Faction faction){
-		return (faction != null) && !faction.isNone() && !faction.isSafeZone() && !faction.isWarZone();
 	}
 
 }

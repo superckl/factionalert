@@ -31,6 +31,10 @@ public class AlertsCommand extends FACommand{
 	@Override
 	public boolean execute(final CommandSender sender, final Command command, final String label,
 			final String[] args) {
+		if(!sender.hasPermission("factionalert.alerts")){
+			sender.sendMessage(ChatColor.RED+"You don't have permission to do that.");
+			return false;
+		}
 		if(args.length <= 0){
 			sender.sendMessage(ChatColor.RED+"Invalid arguments");
 			return false;
