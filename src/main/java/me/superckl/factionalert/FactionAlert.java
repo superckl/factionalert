@@ -58,7 +58,7 @@ public class FactionAlert extends JavaPlugin{
 		this.getLogger().info("Registering scoreboard");
 		if(this.checkScoreboardConflicts(1))
 			this.getLogger().warning("Other plugins have registered scoreboards! Conflicts may occur if nameplates are modified.");
-		this.scoreboard = this.getServer().getScoreboardManager().getNewScoreboard();
+		this.scoreboard = this.getServer().getScoreboardManager().getMainScoreboard();
 		this.getLogger().info("Instantiating commands...");
 		this.fillCommands();
 		this.getLogger().info("Reading configuration...");
