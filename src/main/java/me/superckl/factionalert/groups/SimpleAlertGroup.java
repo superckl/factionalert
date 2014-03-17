@@ -43,7 +43,7 @@ public class SimpleAlertGroup extends AlertGroup{
 			public void run() {
 				SimpleAlertGroup.this.cooldowns.remove(name);
 			}
-		}.runTaskLater(this.instance, this.cooldown);
+		}.runTaskLater(this.instance, this.cooldown*20);
 		return true;
 	}
 

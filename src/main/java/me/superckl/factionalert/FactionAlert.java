@@ -15,8 +15,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.superckl.factionalert.commands.AlertsCommand;
+import me.superckl.factionalert.commands.AlertsCommandInjection;
 import me.superckl.factionalert.commands.FACommand;
 import me.superckl.factionalert.commands.ReloadCommand;
+import me.superckl.factionalert.commands.SaveCommand;
 import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
 import me.superckl.factionalert.groups.SimpleAlertGroup;
 
@@ -28,6 +30,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Relation;
 
 public class FactionAlert extends JavaPlugin{
@@ -53,7 +56,7 @@ public class FactionAlert extends JavaPlugin{
 		this.saveDefaultConfig();
 		if(this.getConfig().getBoolean("Version Check")){
 			this.getLogger().info("Starting version check...");
-			this.versionChecker = VersionChecker.start(0.31d, this);
+			this.versionChecker = VersionChecker.start(0.32d, this);
 			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
 		}
 		this.getLogger().info("Registering scoreboard");
@@ -103,10 +106,16 @@ public class FactionAlert extends JavaPlugin{
 
 	public void fillCommands(){
 		this.baseCommands.clear();
-		final FACommand[] commands = {new AlertsCommand(this), new ReloadCommand(this)};
+		final FACommand[] commands = {new AlertsCommand(this), new ReloadCommand(this), new SaveCommand(this)};
 		for(final FACommand command:commands)
 			for(final String alias:command.getAliases())
 				this.baseCommands.put(alias, command);
+		this.getLogger().info("Injecting alerts command...");
+		if(P.p == null){
+			this.getLogger().severe("Factions isn't enabled???");
+			return;
+		}
+		P.p.cmdBase.addSubCommand(new AlertsCommandInjection((AlertsCommand) commands[0]));
 	}
 
 	@Override
