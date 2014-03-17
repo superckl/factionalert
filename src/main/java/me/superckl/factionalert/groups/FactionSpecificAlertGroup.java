@@ -45,7 +45,7 @@ public class FactionSpecificAlertGroup extends AlertGroup{
 			public void run() {
 				FactionSpecificAlertGroup.this.cooldowns.remove(name);
 			}
-		}.runTaskLater(this.instance, this.cooldown);
+		}.runTaskLater(this.instance, this.cooldown*20);
 		return true;
 	}
 
