@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.massivecraft.factions.struct.Relation;
 
 @RequiredArgsConstructor
-public class SimpleAlertGroup extends AlertGroup{
+public class SimpleAlertGroup extends AlertGroup implements Cooldownable{
 
 	@Getter
 	private final boolean enabled;
@@ -25,6 +25,8 @@ public class SimpleAlertGroup extends AlertGroup{
 	@Getter
 	private final String neutral;
 	@Getter
+	private final String none;
+	@Getter
 	private final List<Relation> types;
 	@Getter
 	private final int cooldown;
@@ -33,6 +35,9 @@ public class SimpleAlertGroup extends AlertGroup{
 	@Getter
 	private final Set<String> cooldowns = new HashSet<String>();
 
+	/**
+	 * @return Whether or not the player is not in cooldown
+	 */
 	public boolean cooldown(@NonNull final String name){
 		if(this.cooldowns.contains(name))
 			return false;
@@ -47,6 +52,7 @@ public class SimpleAlertGroup extends AlertGroup{
 		return true;
 	}
 
+	//TODO null
 	public String getAlert(final Relation rel){
 		if(rel == Relation.ENEMY)
 			return this.enemy;

@@ -38,7 +38,7 @@ public class FactionAlert extends JavaPlugin{
 
 	@Getter
 	@Setter(onParam = @_({@NonNull}))
-	private String[] configEntries = new String[] {"Teleport", "Move"};
+	private String[] configEntries = new String[] {"Teleport", "Move", "Combat"};
 	@Getter
 	@Setter(onParam = @_({@NonNull}))
 	private Map<String, FACommand> baseCommands = new HashMap<String, FACommand>();
@@ -50,13 +50,14 @@ public class FactionAlert extends JavaPlugin{
 	private NameplateManager manager;
 	@Getter
 	private VersionChecker versionChecker;
+	private boolean cmdInjected = false;
 
 	@Override
 	public void onEnable(){
 		this.saveDefaultConfig();
 		if(this.getConfig().getBoolean("Version Check")){
 			this.getLogger().info("Starting version check...");
-			this.versionChecker = VersionChecker.start(0.32d, this);
+			this.versionChecker = VersionChecker.start(0.4d, this);
 			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
 		}
 		this.getLogger().info("Registering scoreboard");
@@ -67,11 +68,11 @@ public class FactionAlert extends JavaPlugin{
 		this.fillCommands();
 		this.getLogger().info("Reading configuration...");
 		this.readConfig();
-		final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "excludes.yml"));
-		if(config != null){
-			this.listeners.getDeath().setExcludes(new HashSet<String>(config.getStringList("death")));
-			this.listeners.getMove().setExcludes(new HashSet<String>(config.getStringList("move")));
-			this.listeners.getTeleport().setExcludes(new HashSet<String>(config.getStringList("teleport")));
+		final YamlConfiguration excludes = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "excludes.yml"));
+		if(excludes != null){
+			this.listeners.getDeath().setExcludes(new HashSet<String>(excludes.getStringList("death")));
+			this.listeners.getMove().setExcludes(new HashSet<String>(excludes.getStringList("move")));
+			this.listeners.getTeleport().setExcludes(new HashSet<String>(excludes.getStringList("teleport")));
 		}
 		this.getLogger().info("FactionAlert enabled!");
 	}
@@ -80,12 +81,13 @@ public class FactionAlert extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		try {
-			this.listeners.saveExcludes(new File(this.getDataFolder(), "excludes.yml"));
+			if(this.listeners != null)
+				this.listeners.saveExcludes(new File(this.getDataFolder(), "excludes.yml"));
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean checkScoreboardConflicts(final int tolerance){
 		try {
 			final Field f = this.getServer().getScoreboardManager().getClass().getDeclaredField("scoreboards");
@@ -110,12 +112,15 @@ public class FactionAlert extends JavaPlugin{
 		for(final FACommand command:commands)
 			for(final String alias:command.getAliases())
 				this.baseCommands.put(alias, command);
+		if(this.cmdInjected)
+			return;
 		this.getLogger().info("Injecting alerts command...");
 		if(P.p == null){
 			this.getLogger().severe("Factions isn't enabled???");
 			return;
 		}
 		P.p.cmdBase.addSubCommand(new AlertsCommandInjection((AlertsCommand) commands[0]));
+		this.cmdInjected = true;
 	}
 
 	@Override
@@ -137,8 +142,8 @@ public class FactionAlert extends JavaPlugin{
 			final List<String> typeStrings = c.getStringList(entry.concat(".Types"));
 			final List<Relation> types = new ArrayList<Relation>();
 			for(final String typeString:typeStrings){
-				final Relation relation = Relation.valueOf(typeString);
-				if(relation == null){
+				final Relation relation = typeString.equalsIgnoreCase("none") ? null:Relation.valueOf(typeString);
+				if((relation == null) && !typeString.equalsIgnoreCase("none")){
 					this.getLogger().warning("Failed to read type ".concat(typeString).concat(" for ").concat(entry));
 					continue;
 				}
@@ -147,14 +152,15 @@ public class FactionAlert extends JavaPlugin{
 			final String enemy = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Enemy Alert Message")));
 			final String ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")));
 			final String neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")));
+			final String none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")));
 			final int timeout = c.getInt(entry.concat(".Cooldown"), 0);
-			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, types, timeout, this);
+			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, none, types, timeout, this);
 		}
 		final boolean enabled = c.getBoolean("Member Death.Enabled");
 		final String alert = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message"));
 		final int timeout = c.getInt("Member Death.Cooldown", 0);
 		final FactionSpecificAlertGroup death = new FactionSpecificAlertGroup(enabled, alert, timeout, this);
-		this.listeners = new FactionListeners(alertGroups[0], alertGroups[1], death);
+		this.listeners = new FactionListeners(alertGroups[0], alertGroups[1], alertGroups[2], death);
 		this.getServer().getPluginManager().registerEvents(this.listeners, this);
 
 		final boolean prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");

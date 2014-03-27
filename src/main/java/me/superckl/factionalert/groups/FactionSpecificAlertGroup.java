@@ -11,7 +11,7 @@ import me.superckl.factionalert.FactionAlert;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @RequiredArgsConstructor
-public class FactionSpecificAlertGroup extends AlertGroup{
+public class FactionSpecificAlertGroup extends AlertGroup implements Cooldownable{
 
 	@Getter
 	private final boolean enabled;
