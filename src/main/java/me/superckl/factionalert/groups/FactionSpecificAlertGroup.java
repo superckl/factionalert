@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.massivecraft.factions.Rel;
 
 @RequiredArgsConstructor
-public class FactionSpecificAlertGroup extends AlertGroup{
+public class FactionSpecificAlertGroup extends AlertGroup implements Cooldownable{
 
 	@Getter
 	private final boolean enabled;
@@ -26,7 +26,7 @@ public class FactionSpecificAlertGroup extends AlertGroup{
 	private final String recruit;
 	@Getter
 	private final String member;
-	@Getter
+	@Getter(onMethod = @_(@Override))
 	private final List<Rel> receivers;
 	@Getter
 	private final int cooldown;
@@ -49,6 +49,7 @@ public class FactionSpecificAlertGroup extends AlertGroup{
 		return true;
 	}
 
+	@Override
 	public String getAlert(final Rel rel){
 		if(rel == Rel.LEADER)
 			return this.leader;

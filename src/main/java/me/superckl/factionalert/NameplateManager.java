@@ -2,6 +2,7 @@ package me.superckl.factionalert;
 
 import lombok.AllArgsConstructor;
 import lombok.experimental.ExtensionMethod;
+import me.superckl.factionalert.utils.Utilities;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
