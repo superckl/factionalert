@@ -16,7 +16,7 @@ public class AlertsCommandInjection extends FCommand{
 		this.command = command;
 		this.addAliases(command.getAliases());
 		this.addRequiredArg("enable|disable");
-		this.addRequiredArg("teleport|move|death");
+		this.addRequiredArg("teleport|move|combat|death");
 	}
 
 	@Override

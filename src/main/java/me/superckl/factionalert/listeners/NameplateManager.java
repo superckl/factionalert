@@ -1,4 +1,4 @@
-package me.superckl.factionalert;
+package me.superckl.factionalert.listeners;
 
 import lombok.AllArgsConstructor;
 import lombok.experimental.ExtensionMethod;

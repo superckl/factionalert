@@ -1,4 +1,4 @@
-package me.superckl.factionalert;
+package me.superckl.factionalert.listeners;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
+import me.superckl.factionalert.AlertType;
 import me.superckl.factionalert.events.DispatchSimpleAlertEvent;
 import me.superckl.factionalert.groups.AlertGroup;
 import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
@@ -155,11 +156,6 @@ public class FactionListeners implements Listener{
 					.replaceAll("%m", damaged.getName());
 			damaged.getFaction().alert(this.combat, alert, dispatch.getPlayersInvolved().toNames());
 		}
-	}
-
-	@EventHandler
-	public void onAlert(final DispatchSimpleAlertEvent e){
-		System.out.println(e.getType().toString());
 	}
 
 	public void saveExcludes(@NonNull final File toSave) throws IOException{

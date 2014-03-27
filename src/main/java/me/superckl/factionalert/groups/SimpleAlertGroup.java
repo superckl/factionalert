@@ -75,6 +75,8 @@ public class SimpleAlertGroup extends AlertGroup implements Cooldownable{
 			return this.ally;
 		else if(rel == Rel.TRUCE)
 			return this.truce;
+		else if(rel == null)
+			return this.none;
 		else
 			return this.neutral;
 	}
