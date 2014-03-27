@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -28,7 +26,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
@@ -49,8 +46,6 @@ public class FactionListeners implements Listener{
 	private final SimpleAlertGroup combat;
 	@Getter
 	private final FactionSpecificAlertGroup death;
-	@Getter
-	private final Map<String, BukkitTask> combatTimers = new HashMap<String, BukkitTask>(); //TODO
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerTeleport(final PlayerTeleportEvent e){
@@ -69,16 +64,14 @@ public class FactionListeners implements Listener{
 			relation = faction.getRelationTo(oFaction);
 		if(!this.teleport.getTypes().contains(relation))
 			return;
-		if(!this.teleport.cooldown(e.getPlayer().getName()))
+		if(!this.teleport.cooldown(e.getPlayer().getName(), false))
 			return;
 		final DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(faction, this.teleport, AlertType.TELEPORT, this.teleport.getAlert(relation), Collections.unmodifiableList(Arrays.asList(e.getPlayer())));
 		Bukkit.getPluginManager().callEvent(dispatch);
 		if(dispatch.isCancelled())
 			return;
 		String alert = dispatch.getAlert().replaceAll("%n", e.getPlayer().getName());
-		//TODO no faction
-		if(oFaction.isValid())
-			alert = alert.replaceAll("%f", oFaction.getTag());
+		alert = alert.replaceAll("%f", oFaction.isValid() ? oFaction.getTag():"no faction");
 		faction.alert(this.teleport, alert, dispatch.getPlayersInvolved().toNames());
 	}
 
@@ -101,15 +94,14 @@ public class FactionListeners implements Listener{
 			relation = faction.getRelationTo(oFaction);
 		if(!this.move.getTypes().contains(relation))
 			return;
-		if(!this.move.cooldown(e.getPlayer().getName()))
+		if(!this.move.cooldown(e.getPlayer().getName(), false))
 			return;
 		final DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(faction, this.move, AlertType.MOVE, this.move.getAlert(relation), Collections.unmodifiableList(Arrays.asList(e.getPlayer())));
 		Bukkit.getPluginManager().callEvent(dispatch);
 		if(dispatch.isCancelled())
 			return;
 		String alert = dispatch.getAlert().replaceAll("%n", e.getPlayer().getName());
-		if(oFaction.isValid())
-			alert = alert.replaceAll("%f", oFaction.getTag());
+		alert = alert.replaceAll("%f", oFaction.isValid() ? oFaction.getTag():"no faction");
 		faction.alert(this.move, alert, dispatch.getPlayersInvolved().toNames());
 	}
 
@@ -127,23 +119,22 @@ public class FactionListeners implements Listener{
 		if(damager.getFaction().isValid() && damaged.getFaction().isValid())
 			rel = damager.getRelationTo(damaged);
 		//damager alert
-
 		final DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(damager.getFaction(), this.combat, AlertType.COMBAT, this.combat.getAlert(rel),
 				Collections.unmodifiableList(Arrays.asList(damager.getPlayer(), damaged.getPlayer())));
 		Bukkit.getPluginManager().callEvent(dispatch);
 		if(dispatch.isCancelled())
 			return;
 		String alert = "penis";
-		if(damager.getFaction().isValid() && this.combat.cooldown(damager.getName())){
-			alert = dispatch.getAlert().replaceAll("%n", damaged.getName()).replaceAll("%f", damaged.getFaction().getTag())
+		if(damager.getFaction().isValid() && this.combat.cooldown(damager.getName(), true)){
+			alert = dispatch.getAlert().replaceAll("%n", damaged.getName()).replaceAll("%f", damaged.getFaction().isValid() ? damaged.getFaction().getTag():"no faction")
 					.replaceAll("%m", damager.getName());
-			damager.getFaction().alert(this.combat, alert, new ArrayList<String>()/*dispatch.getPlayersInvolved().toNames()*/);
+			damager.getFaction().alert(this.combat, alert, dispatch.getPlayersInvolved().toNames());
 		}
 		//damaged alert
-		if(damaged.getFaction().isValid()&& this.combat.cooldown(damaged.getName())){
-			alert = dispatch.getAlert().replaceAll("%n", damager.getName()).replaceAll("%f", damager.getFaction().getTag())
+		if(damaged.getFaction().isValid()&& this.combat.cooldown(damaged.getName(), true)){
+			alert = dispatch.getAlert().replaceAll("%n", damager.getName()).replaceAll("%f", damager.getFaction().isValid() ? damager.getFaction().getTag():"no faction")
 					.replaceAll("%m", damaged.getName());
-			damaged.getFaction().alert(this.combat, alert, new ArrayList<String>()/*dispatch.getPlayersInvolved().toNames()*/);
+			damaged.getFaction().alert(this.combat, alert, dispatch.getPlayersInvolved().toNames());
 		}
 	}
 
@@ -156,7 +147,7 @@ public class FactionListeners implements Listener{
 		final Faction faction = FPlayers.i.get(e.getEntity()).getFaction();
 		if(!faction.isValid())
 			return;
-		if(!this.death.cooldown(e.getEntity().getName()))
+		if(!this.death.cooldown(e.getEntity().getName(), false))
 			return;
 		for(final FPlayer player:faction.getFPlayersWhereOnline(true))
 			if(!this.death.getExcludes().contains(player.getName()))
