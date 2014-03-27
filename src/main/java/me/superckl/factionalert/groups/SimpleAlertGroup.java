@@ -1,8 +1,8 @@
 package me.superckl.factionalert.groups;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.factionalert.FactionAlert;
 
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.massivecraft.factions.Rel;
 
@@ -37,22 +38,32 @@ public class SimpleAlertGroup extends AlertGroup implements Cooldownable{
 	@Getter
 	private final FactionAlert instance;
 	@Getter
-	private final Set<String> cooldowns = new HashSet<String>();
+	private final Map<String, BukkitTask> cooldowns = new HashMap<String, BukkitTask>();
 
 	/**
 	 * @return Whether or not the player is not in cooldown
 	 */
-	public boolean cooldown(@NonNull final String name){
-		if(this.cooldowns.contains(name))
+	public boolean cooldown(@NonNull final String name, final boolean reset){
+		if(this.cooldowns.containsKey(name)){
+			if(reset){
+				this.cooldowns.remove(name).cancel();
+				this.cooldowns.put(name,
+						new BukkitRunnable() {
+					public void run() {
+						SimpleAlertGroup.this.cooldowns.remove(name);
+					}
+				}.runTaskLater(this.instance, this.cooldown*20));
+			}
 			return false;
+		}
 		if(this.cooldown <= 0)
 			return true;
-		this.cooldowns.add(name);
-		new BukkitRunnable() {
+		this.cooldowns.put(name,
+				new BukkitRunnable() {
 			public void run() {
 				SimpleAlertGroup.this.cooldowns.remove(name);
 			}
-		}.runTaskLater(this.instance, this.cooldown*20);
+		}.runTaskLater(this.instance, this.cooldown*20));
 		return true;
 	}
 
