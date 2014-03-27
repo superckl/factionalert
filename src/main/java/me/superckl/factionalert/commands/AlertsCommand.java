@@ -73,8 +73,12 @@ public class AlertsCommand extends FACommand{
 				sender.sendMessage(ChatColor.GREEN+"You will now receive move alerts.");
 				return true;
 			}else if(args[0].equalsIgnoreCase("death")){
-				this.instance.getListeners().getDeath().getExcludes().add(sender.getName());
+				this.instance.getListeners().getDeath().getExcludes().remove(sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive death alerts.");
+				return true;
+			}else if(args[0].equalsIgnoreCase("combat")){
+				this.instance.getListeners().getCombat().getExcludes().remove(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will now receive combat alerts.");
 				return true;
 			}
 			sender.sendMessage(ChatColor.RED+"Invalid arguments");
@@ -111,6 +115,10 @@ public class AlertsCommand extends FACommand{
 			}else if(args[0].equalsIgnoreCase("death")){
 				this.instance.getListeners().getDeath().getExcludes().add(sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive death alerts.");
+				return true;
+			}else if(args[0].equalsIgnoreCase("combat")){
+				this.instance.getListeners().getCombat().getExcludes().add(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will no longer receive combat alerts.");
 				return true;
 			}
 			sender.sendMessage(ChatColor.RED+"Invalid arguments");

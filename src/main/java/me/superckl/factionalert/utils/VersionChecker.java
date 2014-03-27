@@ -1,4 +1,4 @@
-package me.superckl.factionalert;
+package me.superckl.factionalert.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import lombok.Cleanup;
 import lombok.Getter;
+import me.superckl.factionalert.FactionAlert;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;

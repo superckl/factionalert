@@ -21,6 +21,9 @@ import me.superckl.factionalert.commands.ReloadCommand;
 import me.superckl.factionalert.commands.SaveCommand;
 import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
 import me.superckl.factionalert.groups.SimpleAlertGroup;
+import me.superckl.factionalert.listeners.FactionListeners;
+import me.superckl.factionalert.listeners.NameplateManager;
+import me.superckl.factionalert.utils.VersionChecker;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

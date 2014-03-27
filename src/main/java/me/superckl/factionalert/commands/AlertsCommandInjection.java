@@ -17,7 +17,7 @@ public class AlertsCommandInjection extends FCommand{
 		super();
 		this.command = command;
 		this.requiredArgs.add("enable|disable");
-		this.requiredArgs.add("teleport|move|death");
+		this.requiredArgs.add("teleport|move|combat|death");
 		this.aliases.addAll(Arrays.asList(command.getAliases()));
 		this.senderMustBePlayer = true;
 	}
