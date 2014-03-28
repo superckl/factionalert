@@ -38,7 +38,8 @@ import com.massivecraft.factions.struct.Relation;
 
 public class FactionAlert extends JavaPlugin{
 
-
+	@Getter
+	private static FactionAlert instance;
 	@Getter
 	@Setter(onParam = @_({@NonNull}))
 	private String[] configEntries = new String[] {"Teleport", "Move", "Combat"};
@@ -57,6 +58,7 @@ public class FactionAlert extends JavaPlugin{
 
 	@Override
 	public void onEnable(){
+		FactionAlert.instance = this;
 		this.saveDefaultConfig();
 		if(this.getConfig().getBoolean("Version Check")){
 			this.getLogger().info("Starting version check...");
@@ -89,6 +91,7 @@ public class FactionAlert extends JavaPlugin{
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+		instance = null;
 	}
 
 	public boolean checkScoreboardConflicts(final int tolerance){

@@ -2,11 +2,15 @@ package me.superckl.factionalert.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import lombok.NonNull;
+import me.superckl.factionalert.FactionAlert;
 import me.superckl.factionalert.groups.AlertGroup;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
@@ -38,6 +42,15 @@ public class Utilities {
 		for(final Player player:players)
 			names.add(player.getName());
 		return names;
+	}
+	
+	public static <T extends Event> T dispatch(final T event){
+		 		Bukkit.getPluginManager().callEvent(event);
+		 		return event;
+		 	}
+	
+	public static void log(Object toLog, Level level){
+		FactionAlert.getInstance().getLogger().log(level, toLog.toString());
 	}
 
 }

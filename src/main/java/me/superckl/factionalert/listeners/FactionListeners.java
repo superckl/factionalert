@@ -67,8 +67,7 @@ public class FactionListeners implements Listener{
 			return;
 		if(!this.teleport.cooldown(e.getPlayer().getName(), false))
 			return;
-		final DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(faction, this.teleport, AlertType.TELEPORT, this.teleport.getAlert(relation), Collections.unmodifiableList(Arrays.asList(e.getPlayer())));
-		Bukkit.getPluginManager().callEvent(dispatch);
+		final DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(faction, this.teleport, AlertType.TELEPORT, this.teleport.getAlert(relation), Collections.unmodifiableList(Arrays.asList(e.getPlayer()))).dispatch();
 		if(dispatch.isCancelled())
 			return;
 		String alert = dispatch.getAlert().replaceAll("%n", e.getPlayer().getName());
@@ -97,8 +96,7 @@ public class FactionListeners implements Listener{
 			return;
 		if(!this.move.cooldown(e.getPlayer().getName(), false))
 			return;
-		final DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(faction, this.move, AlertType.MOVE, this.move.getAlert(relation), Collections.unmodifiableList(Arrays.asList(e.getPlayer())));
-		Bukkit.getPluginManager().callEvent(dispatch);
+		final DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(faction, this.move, AlertType.MOVE, this.move.getAlert(relation), Collections.unmodifiableList(Arrays.asList(e.getPlayer()))).dispatch();
 		if(dispatch.isCancelled())
 			return;
 		String alert = dispatch.getAlert().replaceAll("%n", e.getPlayer().getName());
@@ -121,8 +119,7 @@ public class FactionListeners implements Listener{
 			rel = damager.getRelationTo(damaged);
 		//damager alert
 		final DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(damager.getFaction(), this.combat, AlertType.COMBAT, this.combat.getAlert(rel),
-				Collections.unmodifiableList(Arrays.asList(damager.getPlayer(), damaged.getPlayer())));
-		Bukkit.getPluginManager().callEvent(dispatch);
+				Collections.unmodifiableList(Arrays.asList(damager.getPlayer(), damaged.getPlayer()))).dispatch();
 		if(dispatch.isCancelled())
 			return;
 		String alert = "penis";

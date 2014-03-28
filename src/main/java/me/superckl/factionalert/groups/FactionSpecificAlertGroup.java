@@ -25,6 +25,10 @@ public class FactionSpecificAlertGroup extends AlertGroup implements Cooldownabl
 	@Getter
 	private final Map<String, BukkitTask> cooldowns = new HashMap<String, BukkitTask>();
 
+	public boolean cooldown(@NonNull final String name){
+		 		return this.cooldown(name, false);
+		 	}
+	
 	public boolean cooldown(@NonNull final String name, final boolean reset){
 		if(this.cooldowns.containsKey(name)){
 			if(reset){
