@@ -6,4 +6,4 @@ depend: [Factions]
 commands:
   factionalert:
     description: Base command for FactionAlert commands
-    aliases: [fa, falerts]
+    aliases: [fa, falerts, falert]
