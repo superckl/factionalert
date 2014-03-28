@@ -39,6 +39,8 @@ import com.massivecraft.factions.Rel;
 public class FactionAlert extends JavaPlugin{
 
 	@Getter
+	private static FactionAlert instance;
+	@Getter
 	@Setter(onParam = @_({@NonNull}))
 	private String[] configEntries = new String[] {"Teleport", "Move", "Combat"};
 	@Getter
@@ -56,10 +58,11 @@ public class FactionAlert extends JavaPlugin{
 
 	@Override
 	public void onEnable(){
+		FactionAlert.instance = this;
 		this.saveDefaultConfig();
 		if(this.getConfig().getBoolean("Version Check")){
 			this.getLogger().info("Starting version check...");
-			this.versionChecker = VersionChecker.start(0.4d, this);
+			this.versionChecker = VersionChecker.start(0.41d, this);
 			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
 		}
 		this.getLogger().info("Registering scoreboard");
@@ -88,6 +91,7 @@ public class FactionAlert extends JavaPlugin{
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+		FactionAlert.instance = null;
 	}
 
 	public boolean checkScoreboardConflicts(final int tolerance){

@@ -40,6 +40,10 @@ public class SimpleAlertGroup extends AlertGroup implements Cooldownable{
 	@Getter
 	private final Map<String, BukkitTask> cooldowns = new HashMap<String, BukkitTask>();
 
+	public boolean cooldown(@NonNull final String name){
+		return this.cooldown(name, false);
+	}
+
 	/**
 	 * @return Whether or not the player is not in cooldown
 	 */
