@@ -1,8 +1,9 @@
 name: FactionAlert
 main: me.superckl.factionalert.FactionAlert
-version: 0.4-Alpha
+version: 0.41-Alpha
 author: superckl
 depend: [Factions]
 commands:
   factionalert:
     description: Base command for FactionAlert commands
+    aliases: [fa, falerts]
