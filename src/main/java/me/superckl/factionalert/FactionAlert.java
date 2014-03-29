@@ -54,6 +54,7 @@ public class FactionAlert extends JavaPlugin{
 	@Getter
 	private NameplateManager manager;
 	@Getter
+	@Setter
 	private VersionChecker versionChecker;
 	private boolean cmdInjected = false;
 
@@ -95,9 +96,8 @@ public class FactionAlert extends JavaPlugin{
 		AlertGroupStorage.getStorage().clear();
 		this.checkConfigs();
 		final List<World> worlds = this.getServer().getWorlds();
-		final String defaultWorld = this.getConfig().getString("Default World");
 		for(final World world:worlds){
-			final String fileName = world.getName().equals(defaultWorld) ? "config.yml":new StringBuilder("config_").append(world.getName()).append(".yml").toString();
+			final String fileName = new StringBuilder("config_").append(world.getName()).append(".yml").toString();
 			final File toRead = new File(this.getDataFolder(), fileName);
 			if(!toRead.exists()){
 				this.getLogger().severe("Configuration not found for world "+world.getName());
@@ -115,18 +115,13 @@ public class FactionAlert extends JavaPlugin{
 
 	public void checkConfigs(final World ... notInList){
 		try {
-			final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getClass().getResource("config.yml").toURI()));
-			config.set("Version Check", null);
-			config.set("Default World", null);
-			final String defaultWorld = this.getConfig().getString("Default World");
+			final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getClass().getResource("default.yml").toURI()));
 			final List<World> worlds = this.getServer().getWorlds();
 			for(final World world:notInList)
 				if(!worlds.contains(world))
 					worlds.add(world);
 			for(final World world:worlds)
 				try {
-					if(world.getName().equals(defaultWorld))
-						continue;
 					final String fileName = new StringBuilder("config_").append(world.getName()).append(".yml").toString();
 					final File toSave = new File(this.getDataFolder(), fileName);
 					if(toSave.exists())
