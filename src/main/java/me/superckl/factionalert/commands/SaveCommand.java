@@ -1,19 +1,15 @@
 package me.superckl.factionalert.commands;
 
-import java.io.File;
+
 import java.io.IOException;
 
-import lombok.RequiredArgsConstructor;
-import me.superckl.factionalert.FactionAlert;
+import me.superckl.factionalert.groups.AlertGroupStorage;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-@RequiredArgsConstructor
 public class SaveCommand extends FACommand{
-
-	private final FactionAlert instance;
 
 	@Override
 	public boolean execute(final CommandSender sender, final Command command, final String label,
@@ -23,7 +19,7 @@ public class SaveCommand extends FACommand{
 			return false;
 		}
 		try {
-			this.instance.getListeners().saveExcludes(new File(this.instance.getDataFolder(), "excludes.yml"));
+			AlertGroupStorage.saveExcludes();
 			sender.sendMessage(ChatColor.GREEN+"All data has been saved.");
 		} catch (final IOException e) {
 			sender.sendMessage(ChatColor.RED+"Something went wrong! Please notify the author.");

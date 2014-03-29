@@ -23,6 +23,8 @@ import com.massivecraft.factions.event.FactionsEventMembershipChange.MembershipC
 @AllArgsConstructor
 public class NameplateManager implements Listener{
 
+	//TODO switch to multi-world
+	
 	private final Scoreboard scoreboard;
 	private final boolean suffix;
 	private final boolean prefix;

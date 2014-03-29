@@ -4,15 +4,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import me.superckl.factionalert.FactionAlert;
+import me.superckl.factionalert.AlertType;
+import me.superckl.factionalert.groups.AlertGroupStorage;
 
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class AlertsCommand extends FACommand{
 
@@ -20,9 +22,9 @@ public class AlertsCommand extends FACommand{
 	@Setter(onParam = @_({@NonNull}))
 	private Map<String, FACommand> baseCommands = new HashMap<String, FACommand>();
 
-	public AlertsCommand(final FactionAlert instance){
+	public AlertsCommand(){
 		this.baseCommands.clear();
-		final FACommand[] commands = {new EnableCommand(instance), new DisableCommand(instance)};
+		final FACommand[] commands = {new EnableCommand(), new DisableCommand()};
 		for(final FACommand command:commands)
 			for(final String alias:command.getAliases())
 				this.baseCommands.put(alias, command);
@@ -31,6 +33,10 @@ public class AlertsCommand extends FACommand{
 	@Override
 	public boolean execute(final CommandSender sender, final Command command, final String label,
 			final String[] args) {
+		if((sender instanceof Player) == false){
+			sender.sendMessage(ChatColor.RED+"You must be a player to execute this command.");
+			return false;
+		}
 		if(!sender.hasPermission("factionalert.alerts")){
 			sender.sendMessage(ChatColor.RED+"You don't have permission to do that.");
 			return false;
@@ -52,10 +58,7 @@ public class AlertsCommand extends FACommand{
 		return new String[] {"alerts", "alert", "al"};
 	}
 
-	@AllArgsConstructor
 	private class EnableCommand extends FACommand{
-
-		private final FactionAlert instance;
 
 		@Override
 		public boolean execute(final CommandSender sender, final Command command, final String label,
@@ -64,21 +67,22 @@ public class AlertsCommand extends FACommand{
 				sender.sendMessage(ChatColor.RED+"Invalid arguments");
 				return false;
 			}
+			final World world = ((Player)sender).getWorld();
 			if(args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp")){
-				this.instance.getListeners().getTeleport().getExcludes().remove(sender.getName());
-				sender.sendMessage(ChatColor.GREEN+"You will now receive teleport alerts.");
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().remove(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will now receive teleport alerts in "+world.getName());
 				return true;
 			}else if(args[0].equalsIgnoreCase("move")){
-				this.instance.getListeners().getMove().getExcludes().remove(sender.getName());
-				sender.sendMessage(ChatColor.GREEN+"You will now receive move alerts.");
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE).getExcludes().remove(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will now receive move alerts in "+world.getName());
 				return true;
 			}else if(args[0].equalsIgnoreCase("death")){
-				this.instance.getListeners().getDeath().getExcludes().remove(sender.getName());
-				sender.sendMessage(ChatColor.GREEN+"You will now receive death alerts.");
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH).getExcludes().remove(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will now receive death alerts in "+world.getName());
 				return true;
 			}else if(args[0].equalsIgnoreCase("combat")){
-				this.instance.getListeners().getCombat().getExcludes().remove(sender.getName());
-				sender.sendMessage(ChatColor.GREEN+"You will now receive combat alerts.");
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT).getExcludes().remove(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will now receive combat alerts in "+world.getName());
 				return true;
 			}
 			sender.sendMessage(ChatColor.RED+"Invalid arguments");
@@ -92,10 +96,7 @@ public class AlertsCommand extends FACommand{
 
 	}
 
-	@AllArgsConstructor
 	private class DisableCommand extends FACommand{
-
-		private final FactionAlert instance;
 
 		@Override
 		public boolean execute(final CommandSender sender, final Command command, final String label,
@@ -104,21 +105,22 @@ public class AlertsCommand extends FACommand{
 				sender.sendMessage(ChatColor.RED+"Invalid arguments");
 				return false;
 			}
+			final World world = ((Player)sender).getWorld();
 			if(args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp")){
-				this.instance.getListeners().getTeleport().getExcludes().add(sender.getName());
-				sender.sendMessage(ChatColor.GREEN+"You will no longer receive teleport alerts.");
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().add(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will no longer receive teleport alerts in "+world.getName());
 				return true;
 			}else if(args[0].equalsIgnoreCase("move")){
-				this.instance.getListeners().getMove().getExcludes().add(sender.getName());
-				sender.sendMessage(ChatColor.GREEN+"You will no longer receive move alerts.");
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE).getExcludes().add(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will no longer receive move alerts in "+world.getName());
 				return true;
 			}else if(args[0].equalsIgnoreCase("death")){
-				this.instance.getListeners().getDeath().getExcludes().add(sender.getName());
-				sender.sendMessage(ChatColor.GREEN+"You will no longer receive death alerts.");
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH).getExcludes().add(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will no longer receive death alerts in "+world.getName());
 				return true;
 			}else if(args[0].equalsIgnoreCase("combat")){
-				this.instance.getListeners().getCombat().getExcludes().add(sender.getName());
-				sender.sendMessage(ChatColor.GREEN+"You will no longer receive combat alerts.");
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT).getExcludes().add(sender.getName());
+				sender.sendMessage(ChatColor.GREEN+"You will no longer receive combat alerts in "+world.getName());
 				return true;
 			}
 			sender.sendMessage(ChatColor.RED+"Invalid arguments");
