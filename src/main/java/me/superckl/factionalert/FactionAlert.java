@@ -20,6 +20,7 @@ import me.superckl.factionalert.commands.ReloadCommand;
 import me.superckl.factionalert.commands.SaveCommand;
 import me.superckl.factionalert.groups.AlertGroupStorage;
 import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
+import me.superckl.factionalert.groups.NameplateAlertGroup;
 import me.superckl.factionalert.groups.SimpleAlertGroup;
 import me.superckl.factionalert.listeners.FactionListeners;
 import me.superckl.factionalert.listeners.NameplateManager;
@@ -78,6 +79,7 @@ public class FactionAlert extends JavaPlugin{
 		AlertGroupStorage.readExcludes();
 		this.getLogger().info("Registering listeners...");
 		this.getServer().getPluginManager().registerEvents(new FactionListeners(), this);
+		this.getServer().getPluginManager().registerEvents(new NameplateManager(this.scoreboard), this);
 		this.getServer().getPluginManager().registerEvents(new WorldLoadListeners(this), this);
 		this.getLogger().info("FactionAlert enabled!");
 	}
@@ -234,16 +236,13 @@ public class FactionAlert extends JavaPlugin{
 		final String recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message"));
 		final int timeout = c.getInt("Member Death.Cooldown", 0);
 		final FactionSpecificAlertGroup death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers, timeout, this);
-		return new AlertGroupStorage(alertGroups[0], alertGroups[1], alertGroups[2], death);
-		/*final boolean prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
+		final boolean prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
 		final String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format"));
 		final boolean suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
 		final String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format"));
-		if(suffix || prefix){
-			this.manager = new NameplateManager(this.scoreboard, suffix, prefix, suffixFormat, prefixFormat);
-			this.getServer().getPluginManager().registerEvents(this.manager, this);
-		}*/
-		//TODO Nameplate manager multi-world
+		final NameplateAlertGroup prefixGroup = new NameplateAlertGroup(prefix, prefixFormat);
+		final NameplateAlertGroup suffixGroup = new NameplateAlertGroup(suffix, suffixFormat);
+		return new AlertGroupStorage(alertGroups[0], alertGroups[1], alertGroups[2], death, prefixGroup, suffixGroup);
 	}
 
 	/*public void readConfig(){

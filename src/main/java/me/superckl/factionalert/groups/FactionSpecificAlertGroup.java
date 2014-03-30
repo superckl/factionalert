@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import me.superckl.factionalert.FactionAlert;
 
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,23 +15,33 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.massivecraft.factions.Rel;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class FactionSpecificAlertGroup extends AlertGroup implements Cooldownable{
 
 	@Getter
-	private final boolean enabled;
+	@Setter
+	private boolean enabled;
 	@Getter
-	private final String leader;
+	@Setter
+	@NonNull
+	private String leader;
 	@Getter
-	private final String officer;
+	@Setter
+	@NonNull
+	private String officer;
 	@Getter
-	private final String recruit;
+	@Setter
+	@NonNull
+	private String recruit;
 	@Getter
-	private final String member;
+	@Setter
+	@NonNull
+	private String member;
 	@Getter(onMethod = @_(@Override))
 	private final List<Rel> receivers;
 	@Getter
-	private final int cooldown;
+	@Setter
+	private int cooldown;
 	@Getter
 	private final FactionAlert instance;
 	@Getter
