@@ -117,7 +117,7 @@ public class FactionAlert extends JavaPlugin{
 
 	public void checkConfigs(final World ... notInList){
 		try {
-			final YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getClass().getResource("default.yml").toURI()));
+			final YamlConfiguration config = YamlConfiguration.loadConfiguration(this.getClass().getResourceAsStream("/default.yml"));
 			final List<World> worlds = this.getServer().getWorlds();
 			for(final World world:notInList)
 				if(!worlds.contains(world))
