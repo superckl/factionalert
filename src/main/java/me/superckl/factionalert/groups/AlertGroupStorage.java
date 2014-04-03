@@ -44,7 +44,7 @@ public class AlertGroupStorage {
 
 	public static void readExcludes(){
 		for(final String name:AlertGroupStorage.storage.keySet()){
-			final File toRead = new File(FactionAlert.getInstance().getDataFolder(), new StringBuilder("excludes_").append(name).append(".yml").toString());
+			final File toRead = new File(FactionAlert.getInstance().getDataFolder(), new StringBuilder("data/excludes_").append(name).append(".yml").toString());
 			if(!toRead.exists())
 				continue;
 			final YamlConfiguration excludes = YamlConfiguration.loadConfiguration(toRead);
@@ -60,7 +60,7 @@ public class AlertGroupStorage {
 
 	public static void saveExcludes() throws IOException{
 		for(final String name:AlertGroupStorage.storage.keySet()){
-			final File toSave = new File(FactionAlert.getInstance().getDataFolder(), new StringBuilder("excludes_").append(name).append(".yml").toString());
+			final File toSave = new File(FactionAlert.getInstance().getDataFolder(), new StringBuilder("data/excludes_").append(name).append(".yml").toString());
 			final YamlConfiguration config = new YamlConfiguration();
 			final AlertGroupStorage st = AlertGroupStorage.storage.get(name);
 			config.set("death", new ArrayList<String>(st.getByType(AlertType.DEATH).getExcludes()));

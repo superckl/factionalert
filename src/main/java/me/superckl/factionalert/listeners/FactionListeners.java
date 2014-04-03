@@ -29,6 +29,9 @@ import com.massivecraft.mcore.ps.PS;
 @ExtensionMethod({Utilities.class})
 public class FactionListeners implements Listener{
 
+	/**
+	 * Handles teleport alerts.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerTeleport(final PlayerTeleportEvent e){
 		final AlertGroupStorage storage = AlertGroupStorage.getByWorld(e.getTo().getWorld());
@@ -60,6 +63,9 @@ public class FactionListeners implements Listener{
 		faction.alert(teleport, alert, dispatch.getPlayersInvolved().toNames());
 	}
 
+	/**
+	 * Handles moving alerts.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerMove(final PlayerMoveEvent e){
 		final AlertGroupStorage storage = AlertGroupStorage.getByWorld(e.getTo().getWorld());
@@ -91,6 +97,9 @@ public class FactionListeners implements Listener{
 		faction.alert(move, alert, dispatch.getPlayersInvolved().toNames());
 	}
 
+	/**
+	 * Handles death alerts.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(final PlayerDeathEvent e){
 		final AlertGroupStorage storage = AlertGroupStorage.getByWorld(e.getEntity().getWorld());
@@ -115,7 +124,9 @@ public class FactionListeners implements Listener{
 		}
 	}
 
-	//TODO doesn't work
+	/**
+	 * Handles combat alerts.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerAttack(final EntityDamageByEntityEvent e){
 		final AlertGroupStorage storage = AlertGroupStorage.getByWorld(e.getDamager().getWorld());

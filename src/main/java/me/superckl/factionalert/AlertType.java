@@ -7,6 +7,9 @@ import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
 import me.superckl.factionalert.groups.NameplateAlertGroup;
 import me.superckl.factionalert.groups.SimpleAlertGroup;
 
+/**
+ * An enum that contains all possible alert types
+ */
 @RequiredArgsConstructor
 public enum AlertType {
 

@@ -14,6 +14,9 @@ public class WorldLoadListeners implements Listener{
 
 	private final FactionAlert instance;
 
+	/**
+	 * Checks that the world has a configuration, and generates one if not.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onWorldLoad(final WorldLoadEvent e){
 		if(AlertGroupStorage.getByWorld(e.getWorld()) != null)

@@ -28,10 +28,11 @@ import com.massivecraft.factions.event.FactionsEventMembershipChange.MembershipC
 @AllArgsConstructor
 public class NameplateManager implements Listener{
 
-	//TODO switch to multi-world
-
 	private final Scoreboard scoreboard;
 
+	/**
+	 * Assigns the player to their team.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent e){
 		if(e.getPlayer().hasPermission("factionalert.noalert.nameplate"))
@@ -48,11 +49,22 @@ public class NameplateManager implements Listener{
 		this.checkTeam(e.getPlayer(), world, faction, prefix, suffix);
 	}
 
+	/**
+	 * Removes the player from their team.
+	 */
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerQuit(final PlayerQuitEvent e){
+		final World world = e.getPlayer().getWorld();
+		final NameplateAlertGroup prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
+		final NameplateAlertGroup suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		if(!prefix.isEnabled() && !suffix.isEnabled())
+			return;
 		this.removeTeam(e.getPlayer());
 	}
 
+	/**
+	 * Changes the player's team based on the action.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerLeaveOrJoinFaction(final FactionsEventMembershipChange e){
 		if((e.getUPlayer().getPlayer() == null) || e.getUPlayer().getPlayer().hasPermission("factionalert.noalert.nameplate"))
@@ -73,6 +85,9 @@ public class NameplateManager implements Listener{
 		}
 	}
 
+	/**
+	 * Changes the player's team.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerChangeWorld(final PlayerChangedWorldEvent e){
 		final World world = e.getPlayer().getWorld();
@@ -81,6 +96,10 @@ public class NameplateManager implements Listener{
 		this.checkTeam(e.getPlayer(), world, UPlayer.get(e.getPlayer()).getFaction(), prefix, suffix);
 	}
 
+	/**
+	 * Removes a player's team.
+	 * @param player The player whose team should be removed.
+	 */
 	private void removeTeam(final OfflinePlayer player){
 		final Team team = this.scoreboard.getPlayerTeam(player);
 		if(team == null)
@@ -88,6 +107,14 @@ public class NameplateManager implements Listener{
 		team.removePlayer(player);
 	}
 
+	/**
+	 * Adds a player to his/her team.
+	 * @param player The player to check.
+	 * @param world The world to check with.
+	 * @param faction The faction to check with.
+	 * @param prefix The prefix to check with.
+	 * @param suffix the suffix to check with.
+	 */
 	private void checkTeam(final OfflinePlayer player, final World world, final Faction faction, final NameplateAlertGroup prefix, final NameplateAlertGroup suffix){
 		if((!prefix.isEnabled() && !suffix.isEnabled()) || !faction.isValid())
 			return;
