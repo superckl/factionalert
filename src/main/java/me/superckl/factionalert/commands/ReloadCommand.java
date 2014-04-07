@@ -1,7 +1,13 @@
 package me.superckl.factionalert.commands;
 
+import java.io.IOException;
+
 import lombok.AllArgsConstructor;
 import me.superckl.factionalert.FactionAlert;
+import me.superckl.factionalert.groups.AlertGroupStorage;
+import me.superckl.factionalert.listeners.FactionListeners;
+import me.superckl.factionalert.listeners.WorldLoadListeners;
+import me.superckl.factionalert.utils.VersionChecker;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -20,10 +26,24 @@ public class ReloadCommand extends FACommand{
 			sender.sendMessage(ChatColor.RED+"You don't have permission to do that.");
 			return false;
 		}
+		try {
+			AlertGroupStorage.saveExcludes();
+		} catch (final IOException e) {
+			this.instance.getLogger().warning("Failed to save excludes.");
+			e.printStackTrace();
+		}
 		this.instance.reloadConfig();
 		HandlerList.unregisterAll(this.instance);
-		this.instance.readConfig();
+		this.instance.readAllConfigs();
+		AlertGroupStorage.readExcludes();
 		this.instance.fillCommands();
+		this.instance.getServer().getPluginManager().registerEvents(new FactionListeners(), this.instance);
+		this.instance.getServer().getPluginManager().registerEvents(new WorldLoadListeners(this.instance), this. instance);
+		if(this.instance.getConfig().getBoolean("Version Check")){
+			this.instance.getLogger().info("Starting version check...");
+			this.instance.setVersionChecker(VersionChecker.start(0.5d, this.instance));
+			this.instance.getServer().getPluginManager().registerEvents(this.instance.getVersionChecker(), this.instance);
+		}
 		sender.sendMessage(ChatColor.GREEN+"FactionAlert reloaded.");
 		return true;
 	}

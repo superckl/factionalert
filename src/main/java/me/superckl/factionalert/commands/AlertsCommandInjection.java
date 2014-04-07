@@ -20,6 +20,7 @@ public class AlertsCommandInjection extends FCommand{
 		this.requiredArgs.add("teleport|move|combat|death");
 		this.aliases.addAll(Arrays.asList(command.getAliases()));
 		this.senderMustBePlayer = true;
+		this.errorOnToManyArgs = false;
 	}
 
 	@Override

@@ -33,6 +33,16 @@ public class VersionChecker implements Listener{
 	@Getter
 	private final Set<String> notified = new HashSet<String>();
 
+
+	private VersionChecker(){};
+
+	/**
+	 * Instantiates a new version checker and begins the check asynchronously.
+	 * Register this as a listener for players with the appropiate permission to be notified on join.
+	 * @param version The current version.
+	 * @param instance The instance of FactionAlert to use.
+	 * @return The new instance of VersionChecker.
+	 */
 	public static VersionChecker start(final double version, final FactionAlert instance){
 		final VersionChecker versionChecker = new VersionChecker();
 		new BukkitRunnable() {

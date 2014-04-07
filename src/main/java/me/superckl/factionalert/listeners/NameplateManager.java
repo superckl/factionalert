@@ -1,14 +1,19 @@
 package me.superckl.factionalert.listeners;
 
 import lombok.AllArgsConstructor;
+import lombok.val;
 import lombok.experimental.ExtensionMethod;
+import me.superckl.factionalert.AlertType;
+import me.superckl.factionalert.groups.AlertGroupStorage;
+import me.superckl.factionalert.groups.NameplateAlertGroup;
 import me.superckl.factionalert.utils.Utilities;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.Scoreboard;
@@ -24,65 +29,118 @@ import com.massivecraft.factions.event.FPlayerLeaveEvent;
 public class NameplateManager implements Listener{
 
 	private final Scoreboard scoreboard;
-	private final boolean suffix;
-	private final boolean prefix;
-	private final String suffixFormat;
-	private final String prefixFormat;
 
+	/**
+	 * Assigns the player to their team.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent e){
-		if(!this.prefix && !this.suffix)
-			return;
 		if(e.getPlayer().hasPermission("factionalert.noalert.nameplate"))
+			return;
+		val world = e.getPlayer().getWorld();
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		if(!prefix.isEnabled() && !suffix.isEnabled())
 			return;
 		e.getPlayer().setScoreboard(this.scoreboard);
 		final Faction faction = FPlayers.i.get(e.getPlayer()).getFaction();
 		if(!faction.isValid())
 			return;
-		Team team = NameplateManager.this.scoreboard.getTeam(faction.getTag());
-		if(team == null){
-			team = this.scoreboard.registerNewTeam(faction.getTag());
-			if(this.suffix)
-				team.setSuffix(this.suffixFormat.formatNameplate(faction.getTag()));
-			if(this.prefix)
-				team.setPrefix(this.prefixFormat.formatNameplate(faction.getTag()));
-		}
-		team.addPlayer(e.getPlayer());
+		this.checkTeam(e.getPlayer(), world, faction, prefix, suffix);
 	}
 
+	/**
+	 * Removes the player from their team.
+	 */
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerQuit(final PlayerQuitEvent e){
-		final Team team = this.scoreboard.getPlayerTeam(e.getPlayer());
-		if(team == null)
+		val world = e.getPlayer().getWorld();
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		if(!prefix.isEnabled() && !suffix.isEnabled())
 			return;
-		team.removePlayer(e.getPlayer());
+		this.removeTeam(e.getPlayer());
 	}
 
+	/**
+	 * Removes the player from their team.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerLeaveFaction(final FPlayerLeaveEvent e){
-		OfflinePlayer player = e.getFPlayer().getPlayer();
-		if(player == null)
-			player = Bukkit.getOfflinePlayer(e.getFPlayer().getName());
+		final OfflinePlayer player = e.getFPlayer().getPlayer();
 		if(player == null)
 			return;
-		final Team team = this.scoreboard.getPlayerTeam(player);
-		if(team == null)
+		val world = e.getFPlayer().getPlayer().getWorld();
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		if(!prefix.isEnabled() && !suffix.isEnabled())
 			return;
-		team.removePlayer(e.getFPlayer().getPlayer());
+		this.removeTeam(player);
 	}
 
+	/**
+	 * Assigns the player to their team.
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoinFaction(final FPlayerJoinEvent e){
 		if(e.getFPlayer().getPlayer().hasPermission("factionalert.noalert.nameplate"))
 			return;
+		val world = e.getFPlayer().getPlayer().getWorld();
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
 		Team team = this.scoreboard.getTeam(e.getFaction().getTag());
 		if(team == null){
 			team = this.scoreboard.registerNewTeam(e.getFaction().getTag());
-			if(this.suffix)
-				team.setSuffix(this.suffixFormat.formatNameplate(e.getFaction().getTag()));
-			if(this.prefix)
-				team.setPrefix(this.prefixFormat.formatNameplate(e.getFaction().getTag()));
+			if(suffix.isEnabled())
+				team.setSuffix(suffix.getFormat().formatNameplate(e.getFaction().getTag()));
+			if(prefix.isEnabled())
+				team.setPrefix(prefix.getFormat().formatNameplate(e.getFaction().getTag()));
 		}
 		team.addPlayer(e.getFPlayer().getPlayer());
 	}
+
+	/**
+	 * Changes the player's team.
+	 */
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerChangeWorld(final PlayerChangedWorldEvent e){
+		val world = e.getPlayer().getWorld();
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		this.checkTeam(e.getPlayer(), world, FPlayers.i.get(e.getPlayer()).getFaction(), prefix, suffix);
+	}
+
+	/**
+	 * Removes a player's team.
+	 * @param player The player whose team should be removed.
+	 */
+	private void removeTeam(final OfflinePlayer player){
+		val team = this.scoreboard.getPlayerTeam(player);
+		if(team == null)
+			return;
+		team.removePlayer(player);
+	}
+
+	/**
+	 * Adds a player to his/her team.
+	 * @param player The player to check.
+	 * @param world The world to check with.
+	 * @param faction The faction to check with.
+	 * @param prefix The prefix to check with.
+	 * @param suffix the suffix to check with.
+	 */
+	private void checkTeam(final OfflinePlayer player, final World world, final Faction faction, final NameplateAlertGroup prefix, final NameplateAlertGroup suffix){
+		if((!prefix.isEnabled() && !suffix.isEnabled()) || !faction.isValid())
+			return;
+		Team team = this.scoreboard.getTeam(faction.getTag().concat("_").concat(world.getName()));
+		if(team == null){
+			team = this.scoreboard.registerNewTeam(faction.getTag().concat("_").concat(world.getName()));
+			if(suffix.isEnabled())
+				team.setSuffix(suffix.getFormat().formatNameplate(faction.getTag()));
+			if(prefix.isEnabled())
+				team.setPrefix(prefix.getFormat().formatNameplate(faction.getTag()));
+		}
+		team.addPlayer(player);
+	}
+
 }

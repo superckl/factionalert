@@ -9,6 +9,7 @@ import lombok.Setter;
 import me.superckl.factionalert.AlertType;
 import me.superckl.factionalert.groups.AlertGroup;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
@@ -29,6 +30,8 @@ public class DispatchSimpleAlertEvent extends FactionAlertEvent{
 	@Setter
 	@NonNull
 	private String alert;
+	@Getter
+	private final World world;
 	@Getter
 	@Setter
 	@NonNull

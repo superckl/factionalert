@@ -17,10 +17,22 @@ import com.massivecraft.factions.Faction;
 
 public class Utilities {
 
+	/**
+	 * Checks if a faction is not null, wilderness, safezone, nor warzone.
+	 * @param faction The faction to check.
+	 * @return If the faction is none of the above things.
+	 */
 	public static boolean isValid(@NonNull final Faction faction){
 		return (faction != null) && !faction.isNone() && !faction.isSafeZone() && !faction.isWarZone();
 	}
 
+	/**
+	 * Alerts a faction of an event.
+	 * @param faction The faction to alert.
+	 * @param group The AlertGroup that corresponds to this event.
+	 * @param alert The actual alert to be dispatched.
+	 * @param toExclude A list of players to exclude from the alert.
+	 */
 	public static void alert(@NonNull final Faction faction, @NonNull final AlertGroup group, final String alert, @NonNull final List<String> toExclude){
 		for(final FPlayer player:faction.getFPlayersWhereOnline(true)){
 			if(toExclude.contains(player.getName()))
@@ -30,6 +42,12 @@ public class Utilities {
 		}
 	}
 
+	/**
+	 * Formats strings to fit in the nameplate, ensuring the length is <= 16.
+	 * @param format The format to use.
+	 * @param name The name of the faction to use.
+	 * @return The formatted String.
+	 */
 	public static String formatNameplate(@NonNull final String format, @NonNull String name){
 		final int newLength = (format.length()-2)+name.length();
 		if(newLength > 16)
@@ -37,19 +55,34 @@ public class Utilities {
 		return format.replace("%f", name);
 	}
 
+	/**
+	 * Converts a list of Players to a list of their names, in the same order.
+	 * @param players The list to convert.
+	 * @return The converted list.
+	 */
 	public static List<String> toNames(@NonNull final List<Player> players){
 		final List<String> names = new ArrayList<String>(0);
 		for(final Player player:players)
 			names.add(player.getName());
 		return names;
 	}
-	
+
+	/**
+	 * Simply dispatches an event using the Bukkit Event system.
+	 * @param event The event to dispatch.
+	 * @return The event.
+	 */
 	public static <T extends Event> T dispatch(final T event){
-		 		Bukkit.getPluginManager().callEvent(event);
-		 		return event;
-		 	}
-	
-	public static void log(Object toLog, Level level){
+		Bukkit.getPluginManager().callEvent(event);
+		return event;
+	}
+
+	/**
+	 * Logs an object to FactionAlert's Logger.
+	 * @param toLog The object to log.
+	 * @param level The level with which to log.
+	 */
+	public static void log(final Object toLog, final Level level){
 		FactionAlert.getInstance().getLogger().log(level, toLog.toString());
 	}
 

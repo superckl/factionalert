@@ -3,32 +3,37 @@ package me.superckl.factionalert.groups;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import me.superckl.factionalert.FactionAlert;
 
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-@RequiredArgsConstructor
+import com.massivecraft.factions.struct.Relation;
+
+@AllArgsConstructor
 public class FactionSpecificAlertGroup extends AlertGroup implements Cooldownable{
 
 	@Getter
-	private final boolean enabled;
+	@Setter
+	private boolean enabled;
+	@Setter
+	private String alert;
 	@Getter
-	private final String alert;
-	@Getter
-	private final int cooldown;
+	@Setter
+	private int cooldown;
 	@Getter
 	private final FactionAlert instance;
 	@Getter
 	private final Map<String, BukkitTask> cooldowns = new HashMap<String, BukkitTask>();
 
 	public boolean cooldown(@NonNull final String name){
-		 		return this.cooldown(name, false);
-		 	}
-	
+		return this.cooldown(name, false);
+	}
+
 	public boolean cooldown(@NonNull final String name, final boolean reset){
 		if(this.cooldowns.containsKey(name)){
 			if(reset){
@@ -51,5 +56,10 @@ public class FactionSpecificAlertGroup extends AlertGroup implements Cooldownabl
 			}
 		}.runTaskLater(this.instance, this.cooldown*20));
 		return true;
+	}
+
+	@Override
+	public String getAlert(final Relation rel) {
+		return this.alert;
 	}
 }
