@@ -43,7 +43,7 @@ public class NameplateManager implements Listener{
 		if(!prefix.isEnabled() && !suffix.isEnabled())
 			return;
 		e.getPlayer().setScoreboard(this.scoreboard);
-		final Faction faction = FPlayers.i.get(e.getPlayer()).getFaction();
+		val faction = FPlayers.i.get(e.getPlayer()).getFaction();
 		if(!faction.isValid())
 			return;
 		this.checkTeam(e.getPlayer(), world, faction, prefix, suffix);
@@ -67,7 +67,7 @@ public class NameplateManager implements Listener{
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerLeaveFaction(final FPlayerLeaveEvent e){
-		final OfflinePlayer player = e.getFPlayer().getPlayer();
+		val player = e.getFPlayer().getPlayer();
 		if(player == null)
 			return;
 		val world = e.getFPlayer().getPlayer().getWorld();

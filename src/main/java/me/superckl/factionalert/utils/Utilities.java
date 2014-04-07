@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import lombok.NonNull;
+import lombok.val;
 import me.superckl.factionalert.FactionAlert;
 import me.superckl.factionalert.groups.AlertGroup;
 
@@ -12,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
-import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 
 public class Utilities {
@@ -34,7 +34,7 @@ public class Utilities {
 	 * @param toExclude A list of players to exclude from the alert.
 	 */
 	public static void alert(@NonNull final Faction faction, @NonNull final AlertGroup group, final String alert, @NonNull final List<String> toExclude){
-		for(final FPlayer player:faction.getFPlayersWhereOnline(true)){
+		for(val player:faction.getFPlayersWhereOnline(true)){
 			if(toExclude.contains(player.getName()))
 				continue;
 			if(!group.getExcludes().contains(player.getName()))
@@ -61,8 +61,8 @@ public class Utilities {
 	 * @return The converted list.
 	 */
 	public static List<String> toNames(@NonNull final List<Player> players){
-		final List<String> names = new ArrayList<String>(0);
-		for(final Player player:players)
+		val names = new ArrayList<String>(0);
+		for(val player:players)
 			names.add(player.getName());
 		return names;
 	}

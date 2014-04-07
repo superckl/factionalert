@@ -24,9 +24,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.struct.Relation;
 
 @ExtensionMethod({Utilities.class})
@@ -46,12 +44,12 @@ public class FactionListeners implements Listener{
 			return;
 		if(e.getPlayer().hasPermission("factionalert.noalert.teleport"))
 			return;
-		final Faction faction = Board.getFactionAt(new FLocation(e.getTo()));
+		val faction = Board.getFactionAt(new FLocation(e.getTo()));
 		if(!faction.isValid())
 			return;
 		if(Board.getFactionAt(new FLocation(e.getFrom())).getId().equals(faction.getId()))
 			return;
-		final Faction oFaction = FPlayers.i.get(e.getPlayer()).getFaction();
+		val oFaction = FPlayers.i.get(e.getPlayer()).getFaction();
 		Relation relation = null;
 		if(oFaction.isValid())
 			relation = faction.getRelationTo(oFaction);
@@ -80,14 +78,14 @@ public class FactionListeners implements Listener{
 			return;
 		if(e.getPlayer().hasPermission("factionalert.noalert.move"))
 			return;
-		final Faction faction = Board.getFactionAt(new FLocation(e.getTo()));
+		val faction = Board.getFactionAt(new FLocation(e.getTo()));
 		if(Board.getFactionAt(new FLocation(e.getFrom())).getId().equals(faction.getId()))
 			return;
 		if(!faction.isValid())
 			return;
 		if(Board.getFactionAt(new FLocation(e.getFrom())).getId().equals(faction.getId()))
 			return;
-		final Faction oFaction = FPlayers.i.get(e.getPlayer()).getFaction();
+		val oFaction = FPlayers.i.get(e.getPlayer()).getFaction();
 		Relation relation = null;
 		if(oFaction.isValid())
 			relation = faction.getRelationTo(oFaction);
@@ -116,8 +114,8 @@ public class FactionListeners implements Listener{
 			return;
 		if(((e.getDamager() instanceof Player) == false) || ((e.getEntity() instanceof Player) == false))
 			return;
-		final FPlayer damager = FPlayers.i.get((Player) e.getDamager());
-		final FPlayer damaged = FPlayers.i.get((Player) e.getEntity());
+		val damager = FPlayers.i.get((Player) e.getDamager());
+		val damaged = FPlayers.i.get((Player) e.getEntity());
 		if(damager.getPlayer().hasPermission("factionalert.noalert.combat") || damaged.getPlayer().hasPermission("factionalert.noalert.combat"))
 			return;
 		Relation rel = null;
@@ -155,12 +153,12 @@ public class FactionListeners implements Listener{
 			return;
 		if(e.getEntity().hasPermission("factionalert.noalert.death"))
 			return;
-		final Faction faction = FPlayers.i.get(e.getEntity()).getFaction();
+		val faction = FPlayers.i.get(e.getEntity()).getFaction();
 		if(!faction.isValid())
 			return;
 		if(!death.cooldown(e.getEntity().getName(), false))
 			return;
-		for(final FPlayer player:faction.getFPlayersWhereOnline(true))
+		for(val player:faction.getFPlayersWhereOnline(true))
 			if(!death.getExcludes().contains(player.getName()))
 				player.sendMessage(death.getAlert(null).replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getTag()));
 	}
