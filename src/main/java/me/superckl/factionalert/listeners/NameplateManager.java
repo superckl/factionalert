@@ -73,6 +73,8 @@ public class NameplateManager implements Listener{
 		val world = e.getUPlayer().getPlayer().getWorld();
 		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
 		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		if(!prefix.isEnabled() && !suffix.isEnabled())
+			return;
 		val r = e.getReason();
 		if((r == MembershipChangeReason.CREATE) || (r == MembershipChangeReason.JOIN))
 			this.checkTeam(e.getUPlayer().getPlayer(), world, e.getNewFaction(), prefix, suffix);
