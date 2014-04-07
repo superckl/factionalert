@@ -55,7 +55,7 @@ public class FactionListeners implements Listener{
 			return;
 		if(!teleport.cooldown(e.getPlayer().getName(), false))
 			return;
-		val dispatch = new DispatchSimpleAlertEvent(faction, teleport, AlertType.TELEPORT, teleport.getAlert(relation), e.getTo().getWorld(), Collections.unmodifiableList(Arrays.asList(e.getPlayer()))).dispatch();
+		DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(faction, teleport, AlertType.TELEPORT, teleport.getAlert(relation), e.getTo().getWorld(), Collections.unmodifiableList(Arrays.asList(e.getPlayer()))).dispatch();
 		if(dispatch.isCancelled())
 			return;
 		String alert = dispatch.getAlert().replaceAll("%n", e.getPlayer().getName());
@@ -89,7 +89,7 @@ public class FactionListeners implements Listener{
 			return;
 		if(!move.cooldown(e.getPlayer().getName(), false))
 			return;
-		val dispatch = new DispatchSimpleAlertEvent(faction, move, AlertType.MOVE, move.getAlert(relation), e.getTo().getWorld(), Collections.unmodifiableList(Arrays.asList(e.getPlayer()))).dispatch();
+		DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(faction, move, AlertType.MOVE, move.getAlert(relation), e.getTo().getWorld(), Collections.unmodifiableList(Arrays.asList(e.getPlayer()))).dispatch();
 		if(dispatch.isCancelled())
 			return;
 		String alert = dispatch.getAlert().replaceAll("%n", e.getPlayer().getName());
@@ -146,7 +146,7 @@ public class FactionListeners implements Listener{
 			rel = damager.getRelationTo(damaged);
 		//damager alert
 
-		val dispatch = new DispatchSimpleAlertEvent(damager.getFaction(), combat, AlertType.COMBAT, combat.getAlert(rel), e.getDamager().getWorld(),
+		DispatchSimpleAlertEvent dispatch = new DispatchSimpleAlertEvent(damager.getFaction(), combat, AlertType.COMBAT, combat.getAlert(rel), e.getDamager().getWorld(),
 				Collections.unmodifiableList(Arrays.asList(damager.getPlayer(), damaged.getPlayer()))).dispatch();
 		if(dispatch.isCancelled())
 			return;
