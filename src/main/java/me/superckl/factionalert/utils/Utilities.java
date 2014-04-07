@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import lombok.NonNull;
+import lombok.val;
 import me.superckl.factionalert.FactionAlert;
 import me.superckl.factionalert.groups.AlertGroup;
 
@@ -12,10 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
-import com.massivecraft.factions.Rel;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.UConf;
-import com.massivecraft.factions.entity.UPlayer;
 
 public class Utilities {
 
@@ -36,10 +35,10 @@ public class Utilities {
 	 * @param toExclude A list of players to exclude from the alert.
 	 */
 	public static void alert(@NonNull final Faction faction, @NonNull final AlertGroup group, final String alert, @NonNull final List<String> toExclude){
-		for(final UPlayer player:faction.getUPlayersWhereOnline(true)){
+		for(val player:faction.getUPlayersWhereOnline(true)){
 			if(toExclude.contains(player.getName()))
 				continue;
-			final Rel pToF = player.getRelationTo(faction);
+			val pToF = player.getRelationTo(faction);
 			if(group.getReceivers().contains(pToF) && !group.getExcludes().contains(player.getName()))
 				player.sendMessage(alert);
 		}
@@ -52,7 +51,7 @@ public class Utilities {
 	 * @return The formatted String.
 	 */
 	public static String formatNameplate(@NonNull final String format, @NonNull String name){
-		final int newLength = (format.length()-2)+name.length();
+		val newLength = (format.length()-2)+name.length();
 		if(newLength > 16)
 			name = name.substring(0, name.length()-(newLength-16));
 		return format.replace("%f", name);
@@ -64,8 +63,8 @@ public class Utilities {
 	 * @return The converted list.
 	 */
 	public static List<String> toNames(@NonNull final List<Player> players){
-		final List<String> names = new ArrayList<String>(0);
-		for(final Player player:players)
+		val names = new ArrayList<String>(0);
+		for(val player:players)
 			names.add(player.getName());
 		return names;
 	}

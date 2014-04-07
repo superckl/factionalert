@@ -9,6 +9,7 @@ import java.util.Map;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.val;
 import me.superckl.factionalert.AlertType;
 import me.superckl.factionalert.FactionAlert;
 
@@ -43,14 +44,14 @@ public class AlertGroupStorage {
 	}
 
 	public static void readExcludes(){
-		for(final String name:AlertGroupStorage.storage.keySet()){
-			final File toRead = new File(FactionAlert.getInstance().getDataFolder(), new StringBuilder("data/excludes_").append(name).append(".yml").toString());
+		for(val name:AlertGroupStorage.storage.keySet()){
+			val toRead = new File(FactionAlert.getInstance().getDataFolder(), new StringBuilder("data/excludes_").append(name).append(".yml").toString());
 			if(!toRead.exists())
 				continue;
-			final YamlConfiguration excludes = YamlConfiguration.loadConfiguration(toRead);
+			val excludes = YamlConfiguration.loadConfiguration(toRead);
 			if(excludes == null)
 				continue;
-			final AlertGroupStorage st = AlertGroupStorage.storage.get(name);
+			val st = AlertGroupStorage.storage.get(name);
 			st.getByType(AlertType.DEATH).setExcludes(new HashSet<String>(excludes.getStringList("death")));
 			st.getByType(AlertType.MOVE).setExcludes(new HashSet<String>(excludes.getStringList("move")));
 			st.getByType(AlertType.TELEPORT).setExcludes(new HashSet<String>(excludes.getStringList("teleport")));
@@ -59,10 +60,10 @@ public class AlertGroupStorage {
 	}
 
 	public static void saveExcludes() throws IOException{
-		for(final String name:AlertGroupStorage.storage.keySet()){
-			final File toSave = new File(FactionAlert.getInstance().getDataFolder(), new StringBuilder("data/excludes_").append(name).append(".yml").toString());
-			final YamlConfiguration config = new YamlConfiguration();
-			final AlertGroupStorage st = AlertGroupStorage.storage.get(name);
+		for(val name:AlertGroupStorage.storage.keySet()){
+			val toSave = new File(FactionAlert.getInstance().getDataFolder(), new StringBuilder("data/excludes_").append(name).append(".yml").toString());
+			val config = new YamlConfiguration();
+			val st = AlertGroupStorage.storage.get(name);
 			config.set("death", new ArrayList<String>(st.getByType(AlertType.DEATH).getExcludes()));
 			config.set("move", new ArrayList<String>(st.getByType(AlertType.MOVE).getExcludes()));
 			config.set("teleport", new ArrayList<String>(st.getByType(AlertType.TELEPORT).getExcludes()));

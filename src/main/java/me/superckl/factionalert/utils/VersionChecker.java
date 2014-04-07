@@ -3,13 +3,13 @@ package me.superckl.factionalert.utils;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import lombok.Cleanup;
 import lombok.Getter;
+import lombok.val;
 import me.superckl.factionalert.FactionAlert;
 
 import org.bukkit.ChatColor;
@@ -43,22 +43,22 @@ public class VersionChecker implements Listener{
 	 * @return The new instance of VersionChecker.
 	 */
 	public static VersionChecker start(final double version, final FactionAlert instance){
-		final VersionChecker versionChecker = new VersionChecker();
+		val versionChecker = new VersionChecker();
 		new BukkitRunnable() {
 
 			public void run() {
 				try {
-					final URL url = new URL("https://api.curseforge.com/servermods/files?projectIds=73431");
-					final URLConnection conn = url.openConnection();
+					val url = new URL("https://api.curseforge.com/servermods/files?projectIds=73431");
+					val conn = url.openConnection();
 					conn.addRequestProperty("User-Agent", "FactionAlert version check");
 					conn.setDoOutput(true);
 					@Cleanup
-					final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-					final String response = reader.readLine();
-					final JSONArray array = (JSONArray) JSONValue.parse(response);
-					final String name = ((JSONObject)array.get(array.size()-1)).get("name").toString();
-					final String readVersion = name.split(" ")[1];
-					final double toCheck = Double.parseDouble(readVersion.replace("v", ""));
+					val reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+					val response = reader.readLine();
+					val array = (JSONArray) JSONValue.parse(response);
+					val name = ((JSONObject)array.get(array.size()-1)).get("name").toString();
+					val readVersion = name.split(" ")[1];
+					val toCheck = Double.parseDouble(readVersion.replace("v", ""));
 					if(toCheck > version){
 						versionChecker.needsUpdates.set(true);
 						versionChecker.newVersion = name.replace(" for 1.6.9.4", "");

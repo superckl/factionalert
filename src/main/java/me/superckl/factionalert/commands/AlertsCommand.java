@@ -7,12 +7,12 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.val;
 import me.superckl.factionalert.AlertType;
 import me.superckl.factionalert.groups.AlertGroupStorage;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,9 +25,9 @@ public class AlertsCommand extends FACommand{
 
 	public AlertsCommand(){
 		this.baseCommands.clear();
-		final FACommand[] commands = {new EnableCommand(), new DisableCommand()};
-		for(final FACommand command:commands)
-			for(final String alias:command.getAliases())
+		val commands = new FACommand[] {new EnableCommand(), new DisableCommand()};
+		for(val command:commands)
+			for(val alias:command.getAliases())
 				this.baseCommands.put(alias, command);
 	}
 
@@ -46,7 +46,7 @@ public class AlertsCommand extends FACommand{
 			sender.sendMessage(ChatColor.RED+"Invalid arguments");
 			return false;
 		}
-		final FACommand faCommand = this.baseCommands.get(args[0].toLowerCase());
+		val faCommand = this.baseCommands.get(args[0].toLowerCase());
 		if(faCommand == null){
 			sender.sendMessage(ChatColor.RED+"Invalid arguments");
 			return false;
@@ -68,7 +68,7 @@ public class AlertsCommand extends FACommand{
 				sender.sendMessage(ChatColor.RED+"Invalid arguments");
 				return false;
 			}
-			final World world = args.length > 1 ? Bukkit.getWorld(args[1]):((Player)sender).getWorld();
+			val world = args.length > 1 ? Bukkit.getWorld(args[1]):((Player)sender).getWorld();
 			if(world == null){
 				sender.sendMessage(ChatColor.RED+"World not found.");
 				return false;
@@ -115,7 +115,7 @@ public class AlertsCommand extends FACommand{
 				sender.sendMessage(ChatColor.RED+"Invalid arguments");
 				return false;
 			}
-			final World world = args.length > 1 ? Bukkit.getWorld(args[1]):((Player)sender).getWorld();
+			val world = args.length > 1 ? Bukkit.getWorld(args[1]):((Player)sender).getWorld();
 			if(world == null){
 				sender.sendMessage(ChatColor.RED+"World not found.");
 				return false;

@@ -2,17 +2,16 @@ package me.superckl.factionalert;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.val;
 import me.superckl.factionalert.commands.AlertsCommand;
 import me.superckl.factionalert.commands.AlertsCommandInjection;
 import me.superckl.factionalert.commands.FACommand;
@@ -102,20 +101,20 @@ public class FactionAlert extends JavaPlugin{
 	public void readAllConfigs(){
 		AlertGroupStorage.getStorage().clear();
 		this.checkConfigs();
-		final List<World> worlds = this.getServer().getWorlds();
-		for(final World world:worlds){
-			final String fileName = new StringBuilder("config_").append(world.getName()).append(".yml").toString();
-			final File toRead = new File(this.getDataFolder(), fileName);
+		val worlds = this.getServer().getWorlds();
+		for(val world:worlds){
+			val fileName = new StringBuilder("config_").append(world.getName()).append(".yml").toString();
+			val toRead = new File(this.getDataFolder(), fileName);
 			if(!toRead.exists()){
 				this.getLogger().severe("Configuration not found for world "+world.getName());
 				continue;
 			}
-			final YamlConfiguration config = YamlConfiguration.loadConfiguration(toRead);
+			val config = YamlConfiguration.loadConfiguration(toRead);
 			if(config == null){
 				this.getLogger().severe("Configuration not found for world "+world.getName());
 				continue;
 			}
-			final AlertGroupStorage storage = this.generateGroupStorage(config);
+			val storage = this.generateGroupStorage(config);
 			AlertGroupStorage.add(world, storage);
 		}
 	}
@@ -127,15 +126,15 @@ public class FactionAlert extends JavaPlugin{
 	 */
 	public void checkConfigs(final World ... notInList){
 		try {
-			final YamlConfiguration config = YamlConfiguration.loadConfiguration(this.getClass().getResourceAsStream("/default.yml"));
-			final List<World> worlds = this.getServer().getWorlds();
-			for(final World world:notInList)
+			val config = YamlConfiguration.loadConfiguration(this.getClass().getResourceAsStream("/default.yml"));
+			val worlds = this.getServer().getWorlds();
+			for(val world:notInList)
 				if(!worlds.contains(world))
 					worlds.add(world);
-			for(final World world:worlds)
+			for(val world:worlds)
 				try {
-					final String fileName = new StringBuilder("config_").append(world.getName()).append(".yml").toString();
-					final File toSave = new File(this.getDataFolder(), fileName);
+					val fileName = new StringBuilder("config_").append(world.getName()).append(".yml").toString();
+					val toSave = new File(this.getDataFolder(), fileName);
 					if(toSave.exists())
 						continue;
 					config.save(toSave);
@@ -157,13 +156,13 @@ public class FactionAlert extends JavaPlugin{
 	 */
 	public boolean checkScoreboardConflicts(final int tolerance){
 		try {
-			final Field f = this.getServer().getScoreboardManager().getClass().getDeclaredField("scoreboards");
+			val f = this.getServer().getScoreboardManager().getClass().getDeclaredField("scoreboards");
 			if(f == null){
 				this.getLogger().warning("Failed to check for scoreboard conflicts!");
 				return false;
 			}
 			f.setAccessible(true);
-			final Collection<?> boards = (Collection<?>) f.get(this.getServer().getScoreboardManager());
+			val boards = (Collection<?>) f.get(this.getServer().getScoreboardManager());
 			if(boards.size() > tolerance)
 				return true;
 		} catch (final Throwable t) {
@@ -178,14 +177,14 @@ public class FactionAlert extends JavaPlugin{
 	 */
 	public void fillCommands(){
 		this.baseCommands.clear();
-		final FACommand[] commands = {new AlertsCommand(), new ReloadCommand(this), new SaveCommand()};
-		for(final FACommand command:commands)
-			for(final String alias:command.getAliases())
+		val commands = new FACommand[] {new AlertsCommand(), new ReloadCommand(this), new SaveCommand()};
+		for(val command:commands)
+			for(val alias:command.getAliases())
 				this.baseCommands.put(alias, command);
 		if(this.cmdInjected)
 			return;
 		this.getLogger().info("Injecting alerts command...");
-		final Factions f = (Factions) this.getServer().getPluginManager().getPlugin("Factions");
+		val f = (Factions) this.getServer().getPluginManager().getPlugin("Factions");
 		if(f == null){
 			this.getLogger().severe("Factions doesn't exist but passed the dependency??? What kind of rig are you running here?");
 			return;
@@ -210,61 +209,61 @@ public class FactionAlert extends JavaPlugin{
 	 * @return The generated {@link AlertGroupStorage}
 	 */
 	public AlertGroupStorage generateGroupStorage(final YamlConfiguration c){
-		final SimpleAlertGroup[] alertGroups = new SimpleAlertGroup[this.configEntries.length];
+		val alertGroups = new SimpleAlertGroup[this.configEntries.length];
 		for(int i = 0; i < this.configEntries.length; i++){
-			final String entry = this.configEntries[i];
-			final boolean enabled = c.getBoolean(entry.concat(".Enabled"));
-			final List<String> typeStrings = c.getStringList(entry.concat(".Types"));
-			final List<Rel> types = new ArrayList<Rel>();
-			for(final String typeString:typeStrings){
-				final Rel relation = typeString.equalsIgnoreCase("none") ? null:Rel.valueOf(typeString);
+			val entry = this.configEntries[i];
+			val enabled = c.getBoolean(entry.concat(".Enabled"));
+			val typeStrings = c.getStringList(entry.concat(".Types"));
+			val types = new ArrayList<Rel>();
+			for(val typeString:typeStrings){
+				val relation = typeString.equalsIgnoreCase("none") ? null:Rel.valueOf(typeString);
 				if((relation == null) && !typeString.equalsIgnoreCase("none")){
 					this.getLogger().warning("Failed to read type ".concat(typeString).concat(" for ").concat(entry));
 					continue;
 				}
 				types.add(relation);
 			}
-			final List<String> receiverStrings = c.getStringList(entry.concat(".Receivers"));
-			final List<Rel> receivers = new ArrayList<Rel>();
-			for(final String receiverString:receiverStrings){
-				final Rel relation = Rel.valueOf(receiverString);
+			val receiverStrings = c.getStringList(entry.concat(".Receivers"));
+			val receivers = new ArrayList<Rel>();
+			for(val receiverString:receiverStrings){
+				val relation = Rel.valueOf(receiverString);
 				if(relation == null){
 					this.getLogger().warning("Failed to read receiver ".concat(receiverString).concat(" for ").concat(entry));
 					continue;
 				}
 				receivers.add(relation);
 			}
-			final String enemy = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Enemy Alert Message")));
-			final String ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")));
-			final String neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")));
-			final String truce = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Truce Alert Message")));
-			final String none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")));
-			final int timeout = c.getInt(entry.concat(".Cooldown"), 0);
+			val enemy = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Enemy Alert Message")));
+			val ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")));
+			val neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")));
+			val truce = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Truce Alert Message")));
+			val none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")));
+			val timeout = c.getInt(entry.concat(".Cooldown"), 0);
 			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, truce, none, types, receivers, timeout, this);
 		}
-		final boolean enabled = c.getBoolean("Member Death.Enabled");
-		final List<String> receiverStrings = c.getStringList("Member Death.Receivers");
-		final List<Rel> receivers = new ArrayList<Rel>();
-		for(final String receiverString:receiverStrings){
-			final Rel relation = Rel.valueOf(receiverString);
+		val enabled = c.getBoolean("Member Death.Enabled");
+		val receiverStrings = c.getStringList("Member Death.Receivers");
+		val receivers = new ArrayList<Rel>();
+		for(val receiverString:receiverStrings){
+			val relation = Rel.valueOf(receiverString);
 			if(relation == null){
 				this.getLogger().warning("Failed to read receiver ".concat(receiverString).concat(" for ").concat("Member Death"));
 				continue;
 			}
 			receivers.add(relation);
 		}
-		final String leader = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Leader Alert Message"));
-		final String officer = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Officer Alert Message"));
-		final String member = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message"));
-		final String recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message"));
-		final int timeout = c.getInt("Member Death.Cooldown", 0);
-		final FactionSpecificAlertGroup death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers, timeout, this);
-		final boolean prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
-		final String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format"));
-		final boolean suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
-		final String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format"));
-		final NameplateAlertGroup prefixGroup = new NameplateAlertGroup(prefix, prefixFormat);
-		final NameplateAlertGroup suffixGroup = new NameplateAlertGroup(suffix, suffixFormat);
+		val leader = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Leader Alert Message"));
+		val officer = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Officer Alert Message"));
+		val member = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message"));
+		val recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message"));
+		val timeout = c.getInt("Member Death.Cooldown", 0);
+		val death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers, timeout, this);
+		val prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
+		val prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format"));
+		val suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
+		val suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format"));
+		val prefixGroup = new NameplateAlertGroup(prefix, prefixFormat);
+		val suffixGroup = new NameplateAlertGroup(suffix, suffixFormat);
 		return new AlertGroupStorage(alertGroups[0], alertGroups[1], alertGroups[2], death, prefixGroup, suffixGroup);
 	}
 
