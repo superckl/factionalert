@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.val;
 import lombok.experimental.ExtensionMethod;
 import me.superckl.factionalert.AlertType;
+import me.superckl.factionalert.Metrics;
 import me.superckl.factionalert.groups.AlertGroupStorage;
 import me.superckl.factionalert.groups.NameplateAlertGroup;
 import me.superckl.factionalert.utils.Utilities;
@@ -124,10 +125,14 @@ public class NameplateManager implements Listener{
 		Team team = this.scoreboard.getTeam(faction.getName().concat("_").concat(world.getName()));
 		if(team == null){
 			team = this.scoreboard.registerNewTeam(faction.getName().concat("_").concat(world.getName()));
-			if(suffix.isEnabled())
+			if(suffix.isEnabled()){
 				team.setSuffix(suffix.getFormat().formatNameplate(faction.getName()));
-			if(prefix.isEnabled())
+				Metrics.submitAlert(AlertType.SUFFIX);
+			}
+			if(prefix.isEnabled()){
 				team.setPrefix(prefix.getFormat().formatNameplate(faction.getName()));
+				Metrics.submitAlert(AlertType.PREFIX);
+			}
 		}
 		team.addPlayer(player);
 	}

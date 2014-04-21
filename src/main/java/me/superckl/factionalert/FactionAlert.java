@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.val;
+import lombok.experimental.ExtensionMethod;
 import me.superckl.factionalert.commands.AlertsCommand;
 import me.superckl.factionalert.commands.AlertsCommandInjection;
 import me.superckl.factionalert.commands.FACommand;
@@ -24,6 +25,7 @@ import me.superckl.factionalert.groups.SimpleAlertGroup;
 import me.superckl.factionalert.listeners.FactionListeners;
 import me.superckl.factionalert.listeners.NameplateManager;
 import me.superckl.factionalert.listeners.WorldLoadListeners;
+import me.superckl.factionalert.utils.Utilities;
 import me.superckl.factionalert.utils.VersionChecker;
 
 import org.bukkit.ChatColor;
@@ -37,6 +39,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.Rel;
 
+@ExtensionMethod(Utilities.class)
 public class FactionAlert extends JavaPlugin{
 
 	@Getter
@@ -64,9 +67,11 @@ public class FactionAlert extends JavaPlugin{
 		this.saveDefaultConfig();
 		if(this.getConfig().getBoolean("Version Check")){
 			this.getLogger().info("Starting version check...");
-			this.versionChecker = VersionChecker.start(0.5d, this);
+			this.versionChecker = VersionChecker.start(0.51d, this);
 			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
 		}
+		this.getLogger().info("Starting metrics...");
+		Metrics.start();
 		this.getLogger().info("Registering scoreboard");
 		if(this.checkScoreboardConflicts(1))
 			this.getLogger().warning("Other plugins have registered scoreboards! Conflicts may occur if nameplates are modified.");
@@ -233,11 +238,11 @@ public class FactionAlert extends JavaPlugin{
 				}
 				receivers.add(relation);
 			}
-			val enemy = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Enemy Alert Message")));
-			val ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")));
-			val neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")));
-			val truce = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Truce Alert Message")));
-			val none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")));
+			final String enemy = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Enemy Alert Message")).check());
+			final String ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")).check());
+			final String neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")).check());
+			final String truce = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Truce Alert Message")).check());
+			final String none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")).check());
 			val timeout = c.getInt(entry.concat(".Cooldown"), 0);
 			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, truce, none, types, receivers, timeout, this);
 		}
@@ -252,16 +257,16 @@ public class FactionAlert extends JavaPlugin{
 			}
 			receivers.add(relation);
 		}
-		val leader = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Leader Alert Message"));
-		val officer = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Officer Alert Message"));
-		val member = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message"));
-		val recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message"));
+		final String leader = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Leader Alert Message").check());
+		final String officer = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Officer Alert Message").check());
+		final String member = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message").check());
+		final String recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message").check());
 		val timeout = c.getInt("Member Death.Cooldown", 0);
 		val death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers, timeout, this);
 		val prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
-		val prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format"));
+		final String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format").check());
 		val suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
-		val suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format"));
+		final String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format").check());
 		val prefixGroup = new NameplateAlertGroup(prefix, prefixFormat);
 		val suffixGroup = new NameplateAlertGroup(suffix, suffixFormat);
 		return new AlertGroupStorage(alertGroups[0], alertGroups[1], alertGroups[2], death, prefixGroup, suffixGroup);

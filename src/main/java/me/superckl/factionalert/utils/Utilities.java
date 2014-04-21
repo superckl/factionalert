@@ -88,4 +88,8 @@ public class Utilities {
 		FactionAlert.getInstance().getLogger().log(level, toLog.toString());
 	}
 
+	public static String check(final String string){
+		return string == null ? "":string;
+	}
+
 }

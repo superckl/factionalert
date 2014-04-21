@@ -18,7 +18,7 @@ import com.massivecraft.factions.Rel;
 @AllArgsConstructor
 public class SimpleAlertGroup extends AlertGroup implements Cooldownable{
 
-	@Getter
+	@Getter(onMethod = @_(@Override))
 	@Setter
 	private boolean enabled;
 	@Getter

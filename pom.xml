@@ -4,7 +4,7 @@
 
   <groupId>me.superckl</groupId>
   <artifactId>factionalert</artifactId>
-  <version>0.5-alpha</version>
+  <version>0.51-alpha</version>
   <packaging>jar</packaging>
 
   <name>FactionAlert</name>
@@ -20,6 +20,10 @@
     <repository>
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/content/groups/public/</url>
+    </repository>
+    <repository>
+      <id>Plugin Metrics</id>
+      <url>http://repo.mcstats.org/content/repositories/public</url>
     </repository>
   </repositories>
   
@@ -40,6 +44,12 @@
       <version>7.0.2</version>
     </dependency>
     <dependency>
+      <groupId>org.mcstats.bukkit</groupId>
+      <artifactId>metrics</artifactId>
+      <version>R7</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
 	  <groupId>org.projectlombok</groupId>
 	  <artifactId>lombok</artifactId>
 	  <version>1.12.6</version>
@@ -52,4 +62,30 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+    <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <artifactSet>
+                <excludes>
+                  <exclude>com.massivecraft:*</exclude>
+                  <exclude>org.bukkit:*</exclude>
+                </excludes>
+              </artifactSet>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

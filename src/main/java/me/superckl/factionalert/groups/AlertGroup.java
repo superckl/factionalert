@@ -18,4 +18,5 @@ public abstract class AlertGroup {
 
 	public abstract List<Rel> getReceivers();
 	public abstract String getAlert(final Rel rel);
+	public abstract boolean isEnabled();
 }
