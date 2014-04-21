@@ -11,7 +11,7 @@ import com.massivecraft.factions.struct.Relation;
 public class NameplateAlertGroup extends AlertGroup{
 
 	//Will not unassign nameplates
-	@Getter
+	@Getter(onMethod = @_(@Override))
 	@Setter
 	private boolean enabled;
 	@Getter

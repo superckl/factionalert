@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.val;
+import lombok.experimental.ExtensionMethod;
 import me.superckl.factionalert.commands.AlertsCommand;
 import me.superckl.factionalert.commands.AlertsCommandInjection;
 import me.superckl.factionalert.commands.FACommand;
@@ -24,6 +25,7 @@ import me.superckl.factionalert.groups.SimpleAlertGroup;
 import me.superckl.factionalert.listeners.FactionListeners;
 import me.superckl.factionalert.listeners.NameplateManager;
 import me.superckl.factionalert.listeners.WorldLoadListeners;
+import me.superckl.factionalert.utils.Utilities;
 import me.superckl.factionalert.utils.VersionChecker;
 
 import org.bukkit.ChatColor;
@@ -37,6 +39,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.massivecraft.factions.P;
 import com.massivecraft.factions.struct.Relation;
 
+@ExtensionMethod(Utilities.class)
 public class FactionAlert extends JavaPlugin{
 
 	@Getter
@@ -64,9 +67,11 @@ public class FactionAlert extends JavaPlugin{
 		this.saveDefaultConfig();
 		if(this.getConfig().getBoolean("Version Check")){
 			this.getLogger().info("Starting version check...");
-			this.versionChecker = VersionChecker.start(0.5d, this);
+			this.versionChecker = VersionChecker.start(0.51d, this);
 			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
 		}
+		this.getLogger().info("Starting metrics...");
+		Metrics.start();
 		this.getLogger().info("Registering scoreboard");
 		if(this.checkScoreboardConflicts(1))
 			this.getLogger().warning("Other plugins have registered scoreboards! Conflicts may occur if nameplates are modified.");
@@ -223,21 +228,21 @@ public class FactionAlert extends JavaPlugin{
 				}
 				types.add(relation);
 			}
-			val enemy = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Enemy Alert Message")));
-			val ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")));
-			val neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")));
-			val none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")));
+			String enemy = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Enemy Alert Message")).check());
+			String ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")).check());
+			String neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")).check());
+			String none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")).check());
 			val timeout = c.getInt(entry.concat(".Cooldown"), 0);
 			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, none, types, timeout, this);
 		}
 		val enabled = c.getBoolean("Member Death.Enabled");
-		val alert = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message"));
+		String alert = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message").check());
 		val timeout = c.getInt("Member Death.Cooldown", 0);
 		val death = new FactionSpecificAlertGroup(enabled, alert, timeout, this);
 		val prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
-		val prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format"));
+		String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format").check());
 		val suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
-		val suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format"));
+		String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format").check());
 		val prefixGroup = new NameplateAlertGroup(prefix, prefixFormat);
 		val suffixGroup = new NameplateAlertGroup(suffix, suffixFormat);
 		return new AlertGroupStorage(alertGroups[0], alertGroups[1], alertGroups[2], death, prefixGroup, suffixGroup);

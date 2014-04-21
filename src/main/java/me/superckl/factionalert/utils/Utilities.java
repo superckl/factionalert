@@ -85,5 +85,9 @@ public class Utilities {
 	public static void log(final Object toLog, final Level level){
 		FactionAlert.getInstance().getLogger().log(level, toLog.toString());
 	}
+	
+	public static String check(final String string){
+		return string == null ? "":string;
+	}
 
 }

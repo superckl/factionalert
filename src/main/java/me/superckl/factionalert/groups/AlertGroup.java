@@ -16,5 +16,5 @@ public abstract class AlertGroup {
 	private Set<String> excludes = new HashSet<String>();
 
 	public abstract String getAlert(final Relation rel);
-
+	public abstract boolean isEnabled();
 }

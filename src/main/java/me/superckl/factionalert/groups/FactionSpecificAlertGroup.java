@@ -17,7 +17,7 @@ import com.massivecraft.factions.struct.Relation;
 @AllArgsConstructor
 public class FactionSpecificAlertGroup extends AlertGroup implements Cooldownable{
 
-	@Getter
+	@Getter(onMethod = @_(@Override))
 	@Setter
 	private boolean enabled;
 	@Setter

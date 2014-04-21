@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import lombok.experimental.ExtensionMethod;
 import me.superckl.factionalert.AlertType;
+import me.superckl.factionalert.Metrics;
 import me.superckl.factionalert.events.DispatchSimpleAlertEvent;
 import me.superckl.factionalert.groups.AlertGroupStorage;
 import me.superckl.factionalert.groups.FactionSpecificAlertGroup;
@@ -63,6 +64,7 @@ public class FactionListeners implements Listener{
 		String alert = dispatch.getAlert().replaceAll("%n", e.getPlayer().getName());
 		alert = alert.replaceAll("%f", oFaction.isValid() ? oFaction.getTag():"no faction");
 		faction.alert(teleport, alert, dispatch.getPlayersInvolved().toNames());
+		Metrics.submitAlert(AlertType.TELEPORT);
 	}
 
 	/**
@@ -99,6 +101,7 @@ public class FactionListeners implements Listener{
 		String alert = dispatch.getAlert().replaceAll("%n", e.getPlayer().getName());
 		alert = alert.replaceAll("%f", oFaction.isValid() ? oFaction.getTag():"no faction");
 		faction.alert(move, alert, dispatch.getPlayersInvolved().toNames());
+		Metrics.submitAlert(AlertType.MOVE);
 	}
 
 	/**
@@ -138,6 +141,7 @@ public class FactionListeners implements Listener{
 					.replaceAll("%m", damaged.getName());
 			damaged.getFaction().alert(combat, alert, dispatch.getPlayersInvolved().toNames());
 		}
+		Metrics.submitAlert(AlertType.COMBAT);
 	}
 
 	/**
@@ -161,6 +165,7 @@ public class FactionListeners implements Listener{
 		for(val player:faction.getFPlayersWhereOnline(true))
 			if(!death.getExcludes().contains(player.getName()))
 				player.sendMessage(death.getAlert(null).replaceAll("%n", e.getEntity().getName()).replaceAll("%f", faction.getTag()));
+		Metrics.submitAlert(AlertType.DEATH);
 	}
 
 }
