@@ -70,8 +70,6 @@ public class FactionAlert extends JavaPlugin{
 			this.versionChecker = VersionChecker.start(0.51d, this);
 			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
 		}
-		this.getLogger().info("Starting metrics...");
-		Metrics.start();
 		this.getLogger().info("Registering scoreboard");
 		if(this.checkScoreboardConflicts(1))
 			this.getLogger().warning("Other plugins have registered scoreboards! Conflicts may occur if nameplates are modified.");
@@ -85,6 +83,8 @@ public class FactionAlert extends JavaPlugin{
 		this.getServer().getPluginManager().registerEvents(new FactionListeners(), this);
 		this.getServer().getPluginManager().registerEvents(new NameplateManager(this.scoreboard), this);
 		this.getServer().getPluginManager().registerEvents(new WorldLoadListeners(this), this);
+		this.getLogger().info("Starting metrics...");
+		Metrics.start();
 		this.getLogger().info("FactionAlert enabled!");
 	}
 
