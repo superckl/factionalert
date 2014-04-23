@@ -101,15 +101,15 @@ public class Metrics {
 	}
 
 	public static class SimplePlotter extends Plotter{
-		
-		public SimplePlotter(String name, int value){
+
+		public SimplePlotter(final String name, final int value){
 			super(name);
 			this.value = value;
 		}
 		@Getter(onMethod = @_(@Override))
 		@Setter
 		private int value;
-		
+
 
 	}
 }

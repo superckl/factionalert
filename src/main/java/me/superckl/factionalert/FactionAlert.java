@@ -228,21 +228,21 @@ public class FactionAlert extends JavaPlugin{
 				}
 				types.add(relation);
 			}
-			String enemy = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Enemy Alert Message")).check());
-			String ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")).check());
-			String neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")).check());
-			String none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")).check());
+			final String enemy = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Enemy Alert Message")).check());
+			final String ally = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Ally Alert Message")).check());
+			final String neutral = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Neutral Alert Message")).check());
+			final String none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")).check());
 			val timeout = c.getInt(entry.concat(".Cooldown"), 0);
 			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, none, types, timeout, this);
 		}
 		val enabled = c.getBoolean("Member Death.Enabled");
-		String alert = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message").check());
+		final String alert = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message").check());
 		val timeout = c.getInt("Member Death.Cooldown", 0);
 		val death = new FactionSpecificAlertGroup(enabled, alert, timeout, this);
 		val prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
-		String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format").check());
+		final String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format").check());
 		val suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
-		String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format").check());
+		final String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format").check());
 		val prefixGroup = new NameplateAlertGroup(prefix, prefixFormat);
 		val suffixGroup = new NameplateAlertGroup(suffix, suffixFormat);
 		return new AlertGroupStorage(alertGroups[0], alertGroups[1], alertGroups[2], death, prefixGroup, suffixGroup);
