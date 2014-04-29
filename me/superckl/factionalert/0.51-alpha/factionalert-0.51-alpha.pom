@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.superckl</groupId>
   <artifactId>factionalert</artifactId>
-  <name>FactionAlert</name>
+  <name>factionalert</name>
   <version>0.51-alpha</version>
   <url>http://dev.bukkit.org/bukkit-plugins/factionalert/</url>
   <build>
@@ -82,13 +82,7 @@
     <dependency>
       <groupId>com.massivecraft</groupId>
       <artifactId>factions</artifactId>
-      <version>2.3.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.massivecraft</groupId>
-      <artifactId>mcore</artifactId>
-      <version>7.0.2</version>
+      <version>1.6.9.4</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
