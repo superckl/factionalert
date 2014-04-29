@@ -3,10 +3,10 @@
   <groupId>me.superckl</groupId>
   <artifactId>factionalert</artifactId>
   <versioning>
-    <release>0.51-alpha for 1.6.9.4</release>
+    <release>0.51-alpha</release>
     <versions>
-      <version>0.51-alpha for 1.6.9.4</version>
+      <version>0.51-alpha</version>
     </versions>
-    <lastUpdated>20140429030435</lastUpdated>
+    <lastUpdated>20140429031629</lastUpdated>
   </versioning>
 </metadata>
