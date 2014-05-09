@@ -154,7 +154,7 @@ public class FactionListeners implements Listener{
 				Collections.unmodifiableList(Arrays.asList(damager.getPlayer(), damaged.getPlayer()))).dispatch();
 		if(dispatch.isCancelled())
 			return;
-		String alert = "penis";
+		String alert = "";
 		if(damager.getFaction().isValid() && combat.cooldown(damager.getName(), true)){
 			alert = dispatch.getAlert().replaceAll("%n", damaged.getName()).replaceAll("%f", damaged.getFaction().isValid() ? damaged.getFaction().getName():"no faction")
 					.replaceAll("%m", damager.getName());

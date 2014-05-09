@@ -21,14 +21,12 @@ public class AlertGroupStorage {
 	@Getter
 	private final Map<AlertType, AlertGroup> alerts = new HashMap<AlertType, AlertGroup>();
 
-	public AlertGroupStorage(final SimpleAlertGroup teleport, final SimpleAlertGroup move, final SimpleAlertGroup combat, final FactionSpecificAlertGroup death,
-			final NameplateAlertGroup prefix, final NameplateAlertGroup suffix){
-		this.alerts.put(AlertType.TELEPORT, teleport);
-		this.alerts.put(AlertType.MOVE, move);
-		this.alerts.put(AlertType.COMBAT, combat);
-		this.alerts.put(AlertType.DEATH, death);
-		this.alerts.put(AlertType.PREFIX, prefix);
-		this.alerts.put(AlertType.SUFFIX, suffix);
+	public AlertGroupStorage(final AlertGroup ... groups){
+		for(final AlertGroup group:groups){
+			if(this.alerts.containsKey(group.getType()))
+				throw new IllegalArgumentException("Multiple groups with type "+group.getType().toString()+" were passed to AlertGroupStorage. There can only be one of each type!");
+			this.alerts.put(group.getType(), group);
+		}
 	}
 
 	public AlertGroup getByType(final AlertType type){

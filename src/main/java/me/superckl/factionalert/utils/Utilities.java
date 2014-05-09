@@ -35,6 +35,8 @@ public class Utilities {
 	 * @param toExclude A list of players to exclude from the alert.
 	 */
 	public static void alert(@NonNull final Faction faction, @NonNull final AlertGroup group, final String alert, @NonNull final List<String> toExclude){
+		if(FactionAlert.getInstance().isVerboseLogging())
+			Utilities.log(new StringBuilder("Notifying Faction ").append(faction.getName()).append(" of alert type ").append(group.getType().toString()).toString(), Level.INFO);
 		for(val player:faction.getUPlayersWhereOnline(true)){
 			if(toExclude.contains(player.getName()))
 				continue;

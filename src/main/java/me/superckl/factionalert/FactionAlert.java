@@ -59,31 +59,40 @@ public class FactionAlert extends JavaPlugin{
 	@Getter
 	@Setter
 	private VersionChecker versionChecker;
+	@Getter
+	private boolean verboseLogging;
 	private boolean cmdInjected = false;
 
 	@Override
 	public void onEnable(){
 		FactionAlert.instance = this;
 		this.saveDefaultConfig();
+		this.verboseLogging = this.getConfig().getBoolean("Verbose Logging");
 		if(this.getConfig().getBoolean("Version Check")){
-			this.getLogger().info("Starting version check...");
-			this.versionChecker = VersionChecker.start(0.51d, this);
+			if(this.verboseLogging)
+				this.getLogger().info("Starting version check...");
+			this.versionChecker = VersionChecker.start(0.52d, this);
 			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
 		}
-		this.getLogger().info("Registering scoreboard");
+		if(this.verboseLogging)
+			this.getLogger().info("Registering scoreboard");
 		if(this.checkScoreboardConflicts(1))
 			this.getLogger().warning("Other plugins have registered scoreboards! Conflicts may occur if nameplates are modified.");
 		this.scoreboard = this.getServer().getScoreboardManager().getMainScoreboard();
-		this.getLogger().info("Instantiating commands...");
+		if(this.verboseLogging)
+			this.getLogger().info("Instantiating commands...");
 		this.fillCommands();
-		this.getLogger().info("Reading configuration...");
+		if(this.verboseLogging)
+			this.getLogger().info("Reading configuration...");
 		this.readAllConfigs();
 		AlertGroupStorage.readExcludes();
-		this.getLogger().info("Registering listeners...");
+		if(this.verboseLogging)
+			this.getLogger().info("Registering listeners...");
 		this.getServer().getPluginManager().registerEvents(new FactionListeners(), this);
 		this.getServer().getPluginManager().registerEvents(new NameplateManager(this.scoreboard), this);
 		this.getServer().getPluginManager().registerEvents(new WorldLoadListeners(this), this);
-		this.getLogger().info("Starting metrics...");
+		if(this.verboseLogging)
+			this.getLogger().info("Starting metrics...");
 		Metrics.start();
 		this.getLogger().info("FactionAlert enabled!");
 	}
@@ -143,7 +152,8 @@ public class FactionAlert extends JavaPlugin{
 					if(toSave.exists())
 						continue;
 					config.save(toSave);
-					this.getLogger().info("Generated configuration file for world ".concat(world.getName()));
+					if(this.verboseLogging)
+						this.getLogger().info("Generated configuration file for world ".concat(world.getName()));
 				} catch (final Exception e) {
 					this.getLogger().warning("Failed to generate configuration file for world "+world.getName());
 					e.printStackTrace();
@@ -244,7 +254,7 @@ public class FactionAlert extends JavaPlugin{
 			final String truce = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".Truce Alert Message")).check());
 			final String none = ChatColor.translateAlternateColorCodes('&', c.getString(entry.concat(".None Alert Message")).check());
 			val timeout = c.getInt(entry.concat(".Cooldown"), 0);
-			alertGroups[i] = new SimpleAlertGroup(enabled, enemy, ally, neutral, truce, none, types, receivers, timeout, this);
+			alertGroups[i] = new SimpleAlertGroup(enabled, AlertType.valueOf(this.configEntries[i].toUpperCase()), enemy, ally, neutral, truce, none, types, receivers, timeout, this);
 		}
 		val enabled = c.getBoolean("Member Death.Enabled");
 		val receiverStrings = c.getStringList("Member Death.Receivers");
@@ -262,13 +272,13 @@ public class FactionAlert extends JavaPlugin{
 		final String member = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Member Alert Message").check());
 		final String recruit = ChatColor.translateAlternateColorCodes('&', c.getString("Member Death.Recruit Alert Message").check());
 		val timeout = c.getInt("Member Death.Cooldown", 0);
-		val death = new FactionSpecificAlertGroup(enabled, leader, officer, recruit, member, receivers, timeout, this);
+		val death = new FactionSpecificAlertGroup(enabled, AlertType.DEATH, leader, officer, recruit, member, receivers, timeout, this);
 		val prefix = c.getBoolean("Faction Nameplate.Prefix.Enabled");
 		final String prefixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Prefix.Format").check());
 		val suffix = c.getBoolean("Faction Nameplate.Suffix.Enabled");
 		final String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format").check());
-		val prefixGroup = new NameplateAlertGroup(prefix, prefixFormat);
-		val suffixGroup = new NameplateAlertGroup(suffix, suffixFormat);
+		val prefixGroup = new NameplateAlertGroup(prefix, AlertType.PREFIX, prefixFormat);
+		val suffixGroup = new NameplateAlertGroup(suffix, AlertType.SUFFIX, suffixFormat);
 		return new AlertGroupStorage(alertGroups[0], alertGroups[1], alertGroups[2], death, prefixGroup, suffixGroup);
 	}
 

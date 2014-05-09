@@ -7,6 +7,7 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import me.superckl.factionalert.AlertType;
 
 import com.massivecraft.factions.Rel;
 
@@ -19,4 +20,5 @@ public abstract class AlertGroup {
 	public abstract List<Rel> getReceivers();
 	public abstract String getAlert(final Rel rel);
 	public abstract boolean isEnabled();
+	public abstract AlertType getType();
 }
