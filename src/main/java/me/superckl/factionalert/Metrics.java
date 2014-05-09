@@ -39,7 +39,7 @@ public class Metrics {
 			Metrics.worldsEnabledPlotters = new HashMap<AlertType, SimplePlotter>();
 			Metrics.addPlotters();
 			Metrics.started = true;
-			if(Metrics.metrics.isOptOut())
+			if(Metrics.metrics.isOptOut() && FactionAlert.getInstance().isVerboseLogging())
 				"I see you have chosen to opt out of metrics... I'll shed a tear for you: ;(".log(Level.INFO);
 		} catch (final IOException e) {
 			"Failed to start metrics!".log(Level.WARNING);

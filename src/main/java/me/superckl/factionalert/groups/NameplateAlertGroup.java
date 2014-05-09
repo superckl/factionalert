@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import me.superckl.factionalert.AlertType;
 
 import com.massivecraft.factions.struct.Relation;
 
@@ -14,6 +15,8 @@ public class NameplateAlertGroup extends AlertGroup{
 	@Getter(onMethod = @_(@Override))
 	@Setter
 	private boolean enabled;
+	@Getter(onMethod = @_(@Override))
+	private final AlertType type;
 	@Getter
 	@Setter
 	@NonNull

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import me.superckl.factionalert.AlertType;
 import me.superckl.factionalert.FactionAlert;
 
 import org.bukkit.scheduler.BukkitRunnable;
@@ -20,6 +21,8 @@ public class FactionSpecificAlertGroup extends AlertGroup implements Cooldownabl
 	@Getter(onMethod = @_(@Override))
 	@Setter
 	private boolean enabled;
+	@Getter(onMethod = @_(@Override))
+	private final AlertType type;
 	@Setter
 	private String alert;
 	@Getter

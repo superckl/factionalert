@@ -6,6 +6,7 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import me.superckl.factionalert.AlertType;
 
 import com.massivecraft.factions.struct.Relation;
 
@@ -17,4 +18,5 @@ public abstract class AlertGroup {
 
 	public abstract String getAlert(final Relation rel);
 	public abstract boolean isEnabled();
+	public abstract AlertType getType();
 }
