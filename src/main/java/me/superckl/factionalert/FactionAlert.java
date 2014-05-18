@@ -140,6 +140,7 @@ public class FactionAlert extends JavaPlugin{
 	 */
 	public void checkConfigs(final World ... notInList){
 		try {
+			@SuppressWarnings("deprecation") //Supressed until we are no longer backwards compatible
 			val config = YamlConfiguration.loadConfiguration(this.getClass().getResourceAsStream("/default.yml"));
 			val worlds = this.getServer().getWorlds();
 			for(val world:notInList)
