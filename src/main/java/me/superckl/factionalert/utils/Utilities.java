@@ -2,6 +2,7 @@ package me.superckl.factionalert.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import lombok.NonNull;
@@ -10,6 +11,7 @@ import me.superckl.factionalert.FactionAlert;
 import me.superckl.factionalert.groups.AlertGroup;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
@@ -91,5 +93,24 @@ public class Utilities {
 	public static String check(final String string){
 		return string == null ? "":string;
 	}
+	
+    public static boolean isBukkitUUIDReady(){
+        try{
+            Bukkit.class.getMethod("getPlayer", UUID.class);
+            return true;
+        }catch(Throwable t){
+            return false;
+        }
+    }
+    
+    public static boolean isValidUUID(String uuid) {
+        return uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+    }
+    
+    @SuppressWarnings("deprecation")
+    public static OfflinePlayer getFromNameSupressed(String name){
+        return Bukkit.getOfflinePlayer(name);
+    }
+
 
 }

@@ -71,7 +71,7 @@ public class FactionAlert extends JavaPlugin{
 		if(this.getConfig().getBoolean("Version Check")){
 			if(this.verboseLogging)
 				this.getLogger().info("Starting version check...");
-			this.versionChecker = VersionChecker.start(0.51d, this);
+			this.versionChecker = VersionChecker.start(0.53d, this);
 			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
 		}
 		if(this.verboseLogging)
@@ -141,6 +141,7 @@ public class FactionAlert extends JavaPlugin{
 	 */
 	public void checkConfigs(final World ... notInList){
 		try {
+            @SuppressWarnings("deprecation") //Supressed until we are no longer backwards compatible
 			val config = YamlConfiguration.loadConfiguration(this.getClass().getResourceAsStream("/default.yml"));
 			val worlds = this.getServer().getWorlds();
 			for(val world:notInList)

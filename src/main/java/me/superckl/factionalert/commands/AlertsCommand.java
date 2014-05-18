@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.val;
 import me.superckl.factionalert.AlertType;
 import me.superckl.factionalert.groups.AlertGroupStorage;
+import me.superckl.factionalert.utils.Utilities;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -68,30 +69,32 @@ public class AlertsCommand extends FACommand{
 				sender.sendMessage(ChatColor.RED+"Invalid arguments");
 				return false;
 			}
-			val world = args.length > 1 ? Bukkit.getWorld(args[1]):((Player)sender).getWorld();
+			Player player = (Player) sender;
+			val world = args.length > 1 ? Bukkit.getWorld(args[1]):player.getWorld();
 			if(world == null){
 				sender.sendMessage(ChatColor.RED+"World not found.");
 				return false;
 			}
+			boolean uuid = Utilities.isBukkitUUIDReady();
 			switch(args[0].toLowerCase()){
 			case "teleport":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().remove(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().remove(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive teleport alerts in "+world.getName());
 				return true;
 			case "tp":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().remove(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().remove(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive teleport alerts in "+world.getName());
 				return true;
 			case "move":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE).getExcludes().remove(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE).getExcludes().remove(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive move alerts in "+world.getName());
 				return true;
 			case "death":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH).getExcludes().remove(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH).getExcludes().remove(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive death alerts in "+world.getName());
 				return true;
 			case "combat":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT).getExcludes().remove(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT).getExcludes().remove(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive combat alerts in "+world.getName());
 				return true;
 			}
@@ -115,30 +118,32 @@ public class AlertsCommand extends FACommand{
 				sender.sendMessage(ChatColor.RED+"Invalid arguments");
 				return false;
 			}
-			val world = args.length > 1 ? Bukkit.getWorld(args[1]):((Player)sender).getWorld();
+			Player player = (Player) sender;
+			val world = args.length > 1 ? Bukkit.getWorld(args[1]):player.getWorld();
 			if(world == null){
 				sender.sendMessage(ChatColor.RED+"World not found.");
 				return false;
 			}
+			boolean uuid = Utilities.isBukkitUUIDReady();
 			switch(args[0].toLowerCase()){
 			case "teleport":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().add(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().add(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive teleport alerts in "+world.getName());
 				return true;
 			case "tp":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().add(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().add(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive teleport alerts in "+world.getName());
 				return true;
 			case "move":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE).getExcludes().add(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE).getExcludes().add(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive move alerts in "+world.getName());
 				return true;
 			case "death":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH).getExcludes().add(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH).getExcludes().add(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive death alerts in "+world.getName());
 				return true;
 			case "combat":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT).getExcludes().add(sender.getName());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT).getExcludes().add(uuid ? player.getUniqueId().toString():sender.getName());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive combat alerts in "+world.getName());
 				return true;
 			}
