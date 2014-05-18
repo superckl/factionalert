@@ -34,10 +34,10 @@ public class Metrics {
 	public static void start(){
 		try {
 			Metrics.metrics = new org.mcstats.Metrics(FactionAlert.getInstance());
-			Metrics.metrics.start();
 			Metrics.countPlotters = new HashMap<AlertType, SimplePlotter>();
 			Metrics.worldsEnabledPlotters = new HashMap<AlertType, SimplePlotter>();
 			Metrics.addPlotters();
+			Metrics.metrics.start();
 			Metrics.started = true;
 			if(Metrics.metrics.isOptOut() && FactionAlert.getInstance().isVerboseLogging())
 				"I see you have chosen to opt out of metrics... I'll shed a tear for you: ;(".log(Level.INFO);
