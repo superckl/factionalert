@@ -232,7 +232,7 @@ public class FactionAlert extends JavaPlugin{
 			val typeStrings = c.getStringList(entry.concat(".Types"));
 			val types = new ArrayList<Rel>();
 			for(val typeString:typeStrings){
-				val relation = typeString.equalsIgnoreCase("none") ? null:Rel.valueOf(typeString);
+				Rel relation = typeString.equalsIgnoreCase("none") ? null:Rel.valueOf(typeString);
 				if((relation == null) && !typeString.equalsIgnoreCase("none")){
 					this.getLogger().warning("Failed to read type ".concat(typeString).concat(" for ").concat(entry));
 					continue;
@@ -242,7 +242,7 @@ public class FactionAlert extends JavaPlugin{
 			val receiverStrings = c.getStringList(entry.concat(".Receivers"));
 			val receivers = new ArrayList<Rel>();
 			for(val receiverString:receiverStrings){
-				val relation = Rel.valueOf(receiverString);
+				Rel relation = Rel.valueOf(receiverString);
 				if(relation == null){
 					this.getLogger().warning("Failed to read receiver ".concat(receiverString).concat(" for ").concat(entry));
 					continue;
@@ -261,7 +261,7 @@ public class FactionAlert extends JavaPlugin{
 		val receiverStrings = c.getStringList("Member Death.Receivers");
 		val receivers = new ArrayList<Rel>();
 		for(val receiverString:receiverStrings){
-			val relation = Rel.valueOf(receiverString);
+			Rel relation = Rel.valueOf(receiverString);
 			if(relation == null){
 				this.getLogger().warning("Failed to read receiver ".concat(receiverString).concat(" for ").concat("Member Death"));
 				continue;

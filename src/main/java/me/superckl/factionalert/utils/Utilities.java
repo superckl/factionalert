@@ -49,7 +49,7 @@ public class Utilities {
 	}
 
 	/**
-	 * Formats strings to fit in the nameplate, ensuring the length is <= 16.
+	 * Formats strings to fit in the nameplate, ensuring the length is less than or equal to 16.
 	 * @param format The format to use.
 	 * @param name The name of the faction to use.
 	 * @return The formatted String.
@@ -76,6 +76,7 @@ public class Utilities {
 	/**
 	 * Simply dispatches an event using the Bukkit Event system.
 	 * @param event The event to dispatch.
+	 * @param <T> The type of event.
 	 * @return The event.
 	 */
 	public static <T extends Event> T dispatch(final T event){

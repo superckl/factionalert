@@ -33,6 +33,7 @@ public class NameplateManager implements Listener{
 
 	/**
 	 * Assigns the player to their team.
+	 * @param e The event
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent e){
@@ -52,6 +53,7 @@ public class NameplateManager implements Listener{
 
 	/**
 	 * Removes the player from their team.
+	 * @param e The event
 	 */
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerQuit(final PlayerQuitEvent e){
@@ -65,6 +67,7 @@ public class NameplateManager implements Listener{
 
 	/**
 	 * Changes the player's team based on the action.
+	 * @param e The event
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerLeaveOrJoinFaction(final FactionsEventMembershipChange e){
@@ -90,6 +93,7 @@ public class NameplateManager implements Listener{
 
 	/**
 	 * Changes the player's team.
+	 * @param e The event
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerChangeWorld(final PlayerChangedWorldEvent e){

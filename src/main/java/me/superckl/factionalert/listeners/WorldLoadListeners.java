@@ -19,6 +19,7 @@ public class WorldLoadListeners implements Listener{
 
 	/**
 	 * Checks that the world has a configuration, and generates one if not.
+	 * @param e The event
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onWorldLoad(final WorldLoadEvent e){

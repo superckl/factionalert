@@ -32,6 +32,7 @@ public class FactionListeners implements Listener{
 
 	/**
 	 * Handles teleport alerts.
+	 * @param e The event
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerTeleport(final PlayerTeleportEvent e){
@@ -67,6 +68,7 @@ public class FactionListeners implements Listener{
 
 	/**
 	 * Handles moving alerts.
+	 * @param e The event
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerMove(final PlayerMoveEvent e){
@@ -102,6 +104,7 @@ public class FactionListeners implements Listener{
 
 	/**
 	 * Handles death alerts.
+	 * @param e The event
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(final PlayerDeathEvent e){
@@ -130,6 +133,7 @@ public class FactionListeners implements Listener{
 
 	/**
 	 * Handles combat alerts.
+	 * @param e The event
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerAttack(final EntityDamageByEntityEvent e){

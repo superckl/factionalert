@@ -14,6 +14,7 @@ import me.superckl.factionalert.utils.Utilities;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -70,7 +71,7 @@ public class AlertsCommand extends FACommand{
 				return false;
 			}
 			Player player = (Player) sender;
-			val world = args.length > 1 ? Bukkit.getWorld(args[1]):player.getWorld();
+			World world = args.length > 1 ? Bukkit.getWorld(args[1]):player.getWorld();
 			if(world == null){
 				sender.sendMessage(ChatColor.RED+"World not found.");
 				return false;
@@ -119,7 +120,7 @@ public class AlertsCommand extends FACommand{
 				return false;
 			}
 			Player player = (Player) sender;
-			val world = args.length > 1 ? Bukkit.getWorld(args[1]):player.getWorld();
+			World world = args.length > 1 ? Bukkit.getWorld(args[1]):player.getWorld();
 			if(world == null){
 				sender.sendMessage(ChatColor.RED+"World not found.");
 				return false;
