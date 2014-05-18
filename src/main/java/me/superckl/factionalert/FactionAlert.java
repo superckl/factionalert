@@ -71,7 +71,7 @@ public class FactionAlert extends JavaPlugin{
 		if(this.getConfig().getBoolean("Version Check")){
 			if(this.verboseLogging)
 				this.getLogger().info("Starting version check...");
-			this.versionChecker = VersionChecker.start(0.52d, this);
+			this.versionChecker = VersionChecker.start(0.53d, this);
 			this.getServer().getPluginManager().registerEvents(this.versionChecker, this);
 		}
 		if(this.verboseLogging)

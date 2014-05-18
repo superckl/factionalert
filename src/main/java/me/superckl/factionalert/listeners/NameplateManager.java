@@ -9,7 +9,6 @@ import me.superckl.factionalert.groups.AlertGroupStorage;
 import me.superckl.factionalert.groups.NameplateAlertGroup;
 import me.superckl.factionalert.utils.Utilities;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -82,7 +81,7 @@ public class NameplateManager implements Listener{
 		else if((r == MembershipChangeReason.DISBAND) || (r == MembershipChangeReason.KICK) || (r == MembershipChangeReason.LEAVE)){
 			OfflinePlayer player = e.getUPlayer().getPlayer();
 			if(player == null)
-				player = Bukkit.getOfflinePlayer(e.getUPlayer().getName());
+				player = e.getUPlayer().getName().getFromNameSupressed();
 			if(player == null)
 				return;
 			this.removeTeam(player);
