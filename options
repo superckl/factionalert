@@ -1,0 +1,24 @@
+-classpath
+'C:/Users/superckl/Dropbox/Code/Workspace/factionalert/target/classes;C:/Users/superckl/.m2/repository/org/projectlombok/lombok/1.12.6/lombok-1.12.6.jar;C:/Users/superckl/.m2/repository/org/bukkit/bukkit/1.7.9-R0.1-SNAPSHOT/bukkit-1.7.9-R0.1-SNAPSHOT.jar;C:/Users/superckl/.m2/repository/com/massivecraft/mcore/7.1.0/mcore-7.1.0.jar;C:/Users/superckl/.m2/repository/org/mcstats/bukkit/metrics/R7/metrics-R7.jar;C:/Users/superckl/.m2/repository/com/massivecraft/factions/2.3.1/factions-2.3.1.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'C:/Users/superckl/Dropbox/Code/Workspace/factionalert/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2014. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/superckl/Dropbox/Code/Workspace/factionalert/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'FactionAlert 0.53 API'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' 'C:/Users/superckl/Dropbox/Code/Workspace/factionalert/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'FactionAlert 0.53 API'
