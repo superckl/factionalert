@@ -3,9 +3,9 @@ package me.superckl.factionalert.groups;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -19,7 +19,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class AlertGroupStorage {
 
 	@Getter
-	private final Map<AlertType, AlertGroup> alerts = new HashMap<AlertType, AlertGroup>();
+	private final Map<AlertType, AlertGroup> alerts = new ConcurrentHashMap<AlertType, AlertGroup>();
 
 	public AlertGroupStorage(final AlertGroup ... groups){
 		for(final AlertGroup group:groups){
@@ -71,5 +71,5 @@ public class AlertGroupStorage {
 	}
 
 	@Getter
-	private final static Map<String, AlertGroupStorage> storage = new HashMap<String, AlertGroupStorage>();
+	private final static Map<String, AlertGroupStorage> storage = new ConcurrentHashMap<String, AlertGroupStorage>();
 }
