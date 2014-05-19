@@ -1,11 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>me.superckl</groupId>
   <artifactId>factionalert</artifactId>
-  <version>0.53</version>
-  <packaging>jar</packaging>
+  <version>0.6</version>
+  <packaging>pom</packaging>
 
   <name>FactionAlert</name>
   <url>http://dev.bukkit.org/bukkit-plugins/factionalert/</url>
@@ -33,22 +33,6 @@
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
       <version>1.7.9-R0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.massivecraft</groupId>
-      <artifactId>factions</artifactId>
-      <version>2.3.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.massivecraft</groupId>
-      <artifactId>mcore</artifactId>
-      <version>7.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mcstats.bukkit</groupId>
-      <artifactId>metrics</artifactId>
-      <version>R7</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
 	  <groupId>org.projectlombok</groupId>
@@ -92,9 +76,9 @@
            </goals>
          </pluginExecutionFilter>
          <action>
-           <execute >
+           <execute>
              <runOnIncremental>false</runOnIncremental>
-           </execute >
+           </execute>
          </action>
        </pluginExecution>
      </pluginExecutions>
@@ -161,31 +145,10 @@
               </execution>
             </executions>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>2.3</version>
-        <configuration>
-          <artifactSet>
-                <excludes>
-                  <exclude>com.massivecraft:*</exclude>
-                  <exclude>org.bukkit:*</exclude>
-                </excludes>
-              </artifactSet>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   
-  <profiles>
+<profiles>
   <profile>
     <id>lombok-needs-tools-jar</id>
     <activation>
@@ -214,5 +177,10 @@
   </profile>
 </profiles>
 
-
+  <modules>
+  	<module>factions</module>
+  	<module>factions-1.6.9.4</module>
+    <module>actionalert</module>
+    <module>shader</module>
+  </modules>
 </project>

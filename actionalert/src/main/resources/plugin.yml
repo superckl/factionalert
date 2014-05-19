@@ -1,0 +1,9 @@
+name: ActionAlert
+main: me.superckl.actionalert.ActionAlert
+version: 0.6
+author: superckl
+softdepend: [Factions]
+commands:
+  actionalert:
+    description: Base command for ActionAlert commands
+    aliases: [aa, aalerts, aalert, alerts, alert]
