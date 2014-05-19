@@ -12,10 +12,10 @@ import lombok.val;
 import me.superckl.actionalert.commands.ACommand;
 import me.superckl.actionalert.commands.ReloadCommand;
 import me.superckl.actionalert.commands.SaveCommand;
+import me.superckl.actionalert.factions.FactionAlert;
 import me.superckl.actionalert.groups.AlertGroupStorage;
 import me.superckl.actionalert.utils.Utilities;
 import me.superckl.actionalert.utils.VersionChecker;
-import me.superckl.factions.FactionAlert;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -74,7 +74,7 @@ public class ActionAlert extends JavaPlugin{
 				this.manager.addModule(ModuleType.FACTIONS, module);
 			}else{
 				this.getLogger().info("Enabling Faction alerts for Factions 1.6.9.5...");
-				ActionAlertModule module = new me.superckl.factions_1_6_9_4.FactionAlert(this);
+				ActionAlertModule module = new me.superckl.actionalert.factions_1_6_9_4.FactionAlert(this);
 				module.onEnable();
 				this.manager.addModule(ModuleType.FACTIONS, module);
 			}
