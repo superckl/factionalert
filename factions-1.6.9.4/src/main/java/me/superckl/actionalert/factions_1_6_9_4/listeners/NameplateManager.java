@@ -5,6 +5,7 @@ import lombok.val;
 import lombok.experimental.ExtensionMethod;
 import me.superckl.actionalert.AlertType;
 import me.superckl.actionalert.Metrics;
+import me.superckl.actionalert.ModuleType;
 import me.superckl.actionalert.factions_1_6_9_4.groups.NameplateAlertGroup;
 import me.superckl.actionalert.factions_1_6_9_4.utils.Utilities;
 import me.superckl.actionalert.groups.AlertGroupStorage;
@@ -39,8 +40,8 @@ public class NameplateManager implements Listener{
 		if(e.getPlayer().hasPermission("factionalert.noalert.nameplate"))
 			return;
 		val world = e.getPlayer().getWorld();
-		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
-		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX, ModuleType.FACTIONS);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX, ModuleType.FACTIONS);
 		if(!prefix.isEnabled() && !suffix.isEnabled())
 			return;
 		e.getPlayer().setScoreboard(this.scoreboard);
@@ -56,8 +57,8 @@ public class NameplateManager implements Listener{
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerQuit(final PlayerQuitEvent e){
 		val world = e.getPlayer().getWorld();
-		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
-		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX, ModuleType.FACTIONS);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX, ModuleType.FACTIONS);
 		if(!prefix.isEnabled() && !suffix.isEnabled())
 			return;
 		this.removeTeam(e.getPlayer());
@@ -72,8 +73,8 @@ public class NameplateManager implements Listener{
 		if(player == null)
 			return;
 		val world = e.getFPlayer().getPlayer().getWorld();
-		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
-		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX, ModuleType.FACTIONS);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX, ModuleType.FACTIONS);
 		if(!prefix.isEnabled() && !suffix.isEnabled())
 			return;
 		this.removeTeam(player);
@@ -87,8 +88,8 @@ public class NameplateManager implements Listener{
 		if(e.getFPlayer().getPlayer().hasPermission("factionalert.noalert.nameplate"))
 			return;
 		val world = e.getFPlayer().getPlayer().getWorld();
-		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
-		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX, ModuleType.FACTIONS);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX, ModuleType.FACTIONS);
 		Team team = this.scoreboard.getTeam(e.getFaction().getTag());
 		if(team == null){
 			team = this.scoreboard.registerNewTeam(e.getFaction().getTag());
@@ -106,8 +107,8 @@ public class NameplateManager implements Listener{
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerChangeWorld(final PlayerChangedWorldEvent e){
 		val world = e.getPlayer().getWorld();
-		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX);
-		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX);
+		val prefix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.PREFIX, ModuleType.FACTIONS);
+		val suffix = (NameplateAlertGroup) AlertGroupStorage.getByWorld(world).getByType(AlertType.SUFFIX, ModuleType.FACTIONS);
 		this.checkTeam(e.getPlayer(), world, FPlayers.i.get(e.getPlayer()).getFaction(), prefix, suffix);
 	}
 

@@ -16,6 +16,7 @@ import lombok.extern.java.Log;
 import me.superckl.actionalert.ActionAlert;
 import me.superckl.actionalert.ActionAlertModule;
 import me.superckl.actionalert.AlertType;
+import me.superckl.actionalert.ModuleType;
 import me.superckl.actionalert.commands.ACommand;
 import me.superckl.actionalert.factions.commands.AlertsCommand;
 import me.superckl.actionalert.factions.commands.AlertsCommandInjection;
@@ -256,7 +257,7 @@ public class FactionAlert extends ActionAlertModule{
 		final String suffixFormat = ChatColor.translateAlternateColorCodes('&', c.getString("Faction Nameplate.Suffix.Format").check());
 		val prefixGroup = new NameplateAlertGroup(prefix, AlertType.PREFIX, prefixFormat);
 		val suffixGroup = new NameplateAlertGroup(suffix, AlertType.SUFFIX, suffixFormat);
-		return new AlertGroupStorage(alertGroups[0], alertGroups[1], alertGroups[2], death, prefixGroup, suffixGroup);
+		return new AlertGroupStorage(ModuleType.FACTIONS, alertGroups[0], alertGroups[1], alertGroups[2], death, prefixGroup, suffixGroup);
 	}
 
 }

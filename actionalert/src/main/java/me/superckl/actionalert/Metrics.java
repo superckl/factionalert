@@ -72,11 +72,13 @@ public class Metrics {
 				final AlertGroupStorage storage = AlertGroupStorage.getByWorld(world);
 				if(storage == null)
 					continue;
-				final AlertGroup<?> group = storage.getByType(type);
-				if(group == null)
-					continue;
-				if(group.isEnabled())
-					i++;
+				for(ModuleType mType:ModuleType.values()){
+					final AlertGroup<?> group = storage.getByType(type, mType);
+					if(group == null)
+						continue;
+					if(group.isEnabled())
+						i++;
+				}
 			}
 			final SimplePlotter enabledPlotter = new SimplePlotter(StringUtils.capitalize(type.toString().toLowerCase()), i);
 			enabledGraph.addPlotter(enabledPlotter);
@@ -94,11 +96,13 @@ public class Metrics {
 				final AlertGroupStorage storage = AlertGroupStorage.getByWorld(world);
 				if(storage == null)
 					continue;
-				final AlertGroup<?> group = storage.getByType(type);
-				if(group == null)
-					continue;
-				if(group.isEnabled())
-					i++;
+				for(ModuleType mType:ModuleType.values()){
+					final AlertGroup<?> group = storage.getByType(type, mType);
+					if(group == null)
+						continue;
+					if(group.isEnabled())
+						i++;
+				}
 			}
 			enabledPlotter.setValue(i);
 		}

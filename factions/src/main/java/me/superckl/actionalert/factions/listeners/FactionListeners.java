@@ -7,6 +7,7 @@ import lombok.val;
 import lombok.experimental.ExtensionMethod;
 import me.superckl.actionalert.AlertType;
 import me.superckl.actionalert.Metrics;
+import me.superckl.actionalert.ModuleType;
 import me.superckl.actionalert.factions.events.DispatchSimpleAlertEvent;
 import me.superckl.actionalert.factions.groups.FactionSpecificAlertGroup;
 import me.superckl.actionalert.factions.groups.SimpleAlertGroup;
@@ -39,7 +40,7 @@ public class FactionListeners implements Listener{
 		val storage = AlertGroupStorage.getByWorld(e.getTo().getWorld());
 		if(storage == null)
 			return;
-		val teleport = (SimpleAlertGroup) storage.getByType(AlertType.TELEPORT);
+		val teleport = (SimpleAlertGroup) storage.getByType(AlertType.TELEPORT, ModuleType.FACTIONS);
 		if((teleport == null) || !teleport.isEnabled())
 			return;
 		if(e.getPlayer().hasPermission("factionalert.noalert.teleport"))
@@ -75,7 +76,7 @@ public class FactionListeners implements Listener{
 		val storage = AlertGroupStorage.getByWorld(e.getTo().getWorld());
 		if(storage == null)
 			return;
-		val move = (SimpleAlertGroup) storage.getByType(AlertType.MOVE);
+		val move = (SimpleAlertGroup) storage.getByType(AlertType.MOVE, ModuleType.FACTIONS);
 		if((move == null) || !move.isEnabled() || (e instanceof PlayerTeleportEvent))
 			return;
 		if(e.getPlayer().hasPermission("factionalert.noalert.move"))
@@ -111,7 +112,7 @@ public class FactionListeners implements Listener{
 		val storage = AlertGroupStorage.getByWorld(e.getEntity().getWorld());
 		if(storage == null)
 			return;
-		val death = (FactionSpecificAlertGroup) storage.getByType(AlertType.DEATH);
+		val death = (FactionSpecificAlertGroup) storage.getByType(AlertType.DEATH, ModuleType.FACTIONS);
 		if((death == null) || !death.isEnabled())
 			return;
 		if(e.getEntity().hasPermission("factionalert.noalert.death"))
@@ -140,7 +141,7 @@ public class FactionListeners implements Listener{
 		val storage = AlertGroupStorage.getByWorld(e.getDamager().getWorld());
 		if(storage == null)
 			return;
-		val combat = (SimpleAlertGroup) storage.getByType(AlertType.COMBAT);
+		val combat = (SimpleAlertGroup) storage.getByType(AlertType.COMBAT, ModuleType.FACTIONS);
 		if((combat == null) || !combat.isEnabled())
 			return;
 		if(((e.getDamager() instanceof Player) == false) || ((e.getEntity() instanceof Player) == false))

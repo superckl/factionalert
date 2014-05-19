@@ -9,6 +9,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.val;
 import me.superckl.actionalert.AlertType;
+import me.superckl.actionalert.ModuleType;
 import me.superckl.actionalert.commands.ACommand;
 import me.superckl.actionalert.groups.AlertGroupStorage;
 
@@ -77,23 +78,23 @@ public class AlertsCommand extends ACommand{
 			}
 			switch(args[0].toLowerCase()){
 			case "teleport":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().remove(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT, ModuleType.FACTIONS).getExcludes().remove(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive teleport alerts in "+world.getName());
 				return true;
 			case "tp":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().remove(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT, ModuleType.FACTIONS).getExcludes().remove(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive teleport alerts in "+world.getName());
 				return true;
 			case "move":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE).getExcludes().remove(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE, ModuleType.FACTIONS).getExcludes().remove(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive move alerts in "+world.getName());
 				return true;
 			case "death":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH).getExcludes().remove(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH, ModuleType.FACTIONS).getExcludes().remove(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive death alerts in "+world.getName());
 				return true;
 			case "combat":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT).getExcludes().remove(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT, ModuleType.FACTIONS).getExcludes().remove(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will now receive combat alerts in "+world.getName());
 				return true;
 			}
@@ -125,23 +126,23 @@ public class AlertsCommand extends ACommand{
 			}
 			switch(args[0].toLowerCase()){
 			case "teleport":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().add(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT, ModuleType.FACTIONS).getExcludes().add(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive teleport alerts in "+world.getName());
 				return true;
 			case "tp":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT).getExcludes().add(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.TELEPORT, ModuleType.FACTIONS).getExcludes().add(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive teleport alerts in "+world.getName());
 				return true;
 			case "move":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE).getExcludes().add(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.MOVE, ModuleType.FACTIONS).getExcludes().add(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive move alerts in "+world.getName());
 				return true;
 			case "death":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH).getExcludes().add(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.DEATH, ModuleType.FACTIONS).getExcludes().add(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive death alerts in "+world.getName());
 				return true;
 			case "combat":
-				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT).getExcludes().add(player.getUniqueId().toString());
+				AlertGroupStorage.getByWorld(world).getByType(AlertType.COMBAT, ModuleType.FACTIONS).getExcludes().add(player.getUniqueId().toString());
 				sender.sendMessage(ChatColor.GREEN+"You will no longer receive combat alerts in "+world.getName());
 				return true;
 			}

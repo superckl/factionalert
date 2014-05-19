@@ -8,11 +8,11 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.val;
 import me.superckl.actionalert.commands.ACommand;
 import me.superckl.actionalert.commands.ReloadCommand;
 import me.superckl.actionalert.commands.SaveCommand;
-import me.superckl.actionalert.factions.FactionAlert;
 import me.superckl.actionalert.groups.AlertGroupStorage;
 import me.superckl.actionalert.utils.Utilities;
 import me.superckl.actionalert.utils.VersionChecker;
@@ -40,6 +40,7 @@ public class ActionAlert extends JavaPlugin{
 	@Getter
 	private ModuleManager<ActionAlertModule> manager;
 
+	@SneakyThrows
 	@Override
 	public void onEnable(){
 		ActionAlert.instance = this;
@@ -69,12 +70,12 @@ public class ActionAlert extends JavaPlugin{
 				this.getLogger().severe("Incompatible Factions version found. Please report this to the author. Version: "+plugin.getDescription().getVersion());
 			else if(result == Result.ALLOW){
 				this.getLogger().info("Enabling Faction alerts for Factions 2.4.0+...");
-				ActionAlertModule module = new FactionAlert(this);
+				ActionAlertModule module = (ActionAlertModule) Class.forName("me.superckl.actionalert.factions.FactionAlert").getConstructor(this.getClass()).newInstance(this);
 				module.onEnable();
 				this.manager.addModule(ModuleType.FACTIONS, module);
 			}else{
 				this.getLogger().info("Enabling Faction alerts for Factions 1.6.9.5...");
-				ActionAlertModule module = new me.superckl.actionalert.factions_1_6_9_4.FactionAlert(this);
+				ActionAlertModule module = (ActionAlertModule) Class.forName("me.superckl.actionalert.factions-1.6.9.4.FactionAlert").getConstructor(this.getClass()).newInstance(this);
 				module.onEnable();
 				this.manager.addModule(ModuleType.FACTIONS, module);
 			}
