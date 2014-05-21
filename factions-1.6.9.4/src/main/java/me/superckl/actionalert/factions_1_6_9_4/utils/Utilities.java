@@ -26,7 +26,7 @@ public class Utilities {
 	 * @return If the faction is none of the above things.
 	 */
 	public static boolean isValid(@NonNull final Faction faction){
-		return (faction != null) && !faction.isNone() && !faction.isSafeZone() && !faction.isWarZone();
+		return (faction != null) && faction.isNormal();
 	}
 
 	/**
