@@ -21,6 +21,7 @@ import org.mcstats.Metrics.Plotter;
 @ExtensionMethod(Utilities.class)
 public class Metrics {
 
+	@Getter
 	private static org.mcstats.Metrics metrics;
 	@Getter
 	private static boolean started;
@@ -28,6 +29,14 @@ public class Metrics {
 	private static Map<AlertType, SimplePlotter> countPlotters;
 	@Getter
 	private static Map<AlertType, SimplePlotter> worldsEnabledPlotters;
+	@Getter
+	private static Graph modulesGraph;
+	@Getter
+	private static Graph alertGraph;
+	@Getter
+	private static Graph enabledGraph;
+	@Getter
+	private static Graph versionGraph;
 
 	private Metrics(){}
 
@@ -37,7 +46,6 @@ public class Metrics {
 			Metrics.countPlotters = new HashMap<AlertType, SimplePlotter>();
 			Metrics.worldsEnabledPlotters = new HashMap<AlertType, SimplePlotter>();
 			Metrics.addPlotters();
-
 		} catch (final IOException e) {
 			"Failed to start metrics!".log(Level.WARNING);
 			e.printStackTrace();
@@ -61,18 +69,20 @@ public class Metrics {
 	}
 
 	private static void addPlotters(){
-		final Graph alertGraph = Metrics.metrics.createGraph("Alerts");
-		final Graph enabledGraph = Metrics.metrics.createGraph("Enabled Worlds");
+		Metrics.modulesGraph = Metrics.metrics.createGraph("Enabled Modules");
+		Metrics.versionGraph = Metrics.metrics.createGraph("Factions Version");
+		Metrics.alertGraph = Metrics.metrics.createGraph("Alerts");
+		Metrics.enabledGraph = Metrics.metrics.createGraph("Enabled Worlds");
 		for(final AlertType type:AlertType.values()){
 			final SimplePlotter plotter = new SimplePlotter(StringUtils.capitalize(type.toString().toLowerCase()), 0);
 			Metrics.countPlotters.put(type, plotter);
-			alertGraph.addPlotter(plotter);
+			Metrics.alertGraph.addPlotter(plotter);
 			int i = 0;
 			for(final World world:Bukkit.getWorlds()){
 				final AlertGroupStorage storage = AlertGroupStorage.getByWorld(world);
 				if(storage == null)
 					continue;
-				for(ModuleType mType:ModuleType.values()){
+				for(final ModuleType mType:ModuleType.values()){
 					final AlertGroup<?> group = storage.getByType(type, mType);
 					if(group == null)
 						continue;
@@ -81,7 +91,7 @@ public class Metrics {
 				}
 			}
 			final SimplePlotter enabledPlotter = new SimplePlotter(StringUtils.capitalize(type.toString().toLowerCase()), i);
-			enabledGraph.addPlotter(enabledPlotter);
+			Metrics.enabledGraph.addPlotter(enabledPlotter);
 			Metrics.worldsEnabledPlotters.put(type, enabledPlotter);
 		}
 	}
@@ -96,7 +106,7 @@ public class Metrics {
 				final AlertGroupStorage storage = AlertGroupStorage.getByWorld(world);
 				if(storage == null)
 					continue;
-				for(ModuleType mType:ModuleType.values()){
+				for(final ModuleType mType:ModuleType.values()){
 					final AlertGroup<?> group = storage.getByType(type, mType);
 					if(group == null)
 						continue;

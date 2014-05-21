@@ -10,6 +10,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.val;
+import me.superckl.actionalert.Metrics.SimplePlotter;
 import me.superckl.actionalert.commands.ACommand;
 import me.superckl.actionalert.commands.ReloadCommand;
 import me.superckl.actionalert.commands.SaveCommand;
@@ -65,21 +66,34 @@ public class ActionAlert extends JavaPlugin{
 		this.manager = new ModuleManager<ActionAlertModule>();
 		final Plugin plugin = this.getServer().getPluginManager().getPlugin("Factions");
 		if(plugin != null){
-			Result result = Utilities.checkFactionsVersion(plugin.getDescription().getVersion());
+			Metrics.getVersionGraph().addPlotter(new SimplePlotter(plugin.getDescription().getVersion(), 1));
+			final Result result = Utilities.checkFactionsVersion(plugin.getDescription().getVersion());
 			if(result == Result.DENY)
 				this.getLogger().severe("Incompatible Factions version found. Please report this to the author. Version: "+plugin.getDescription().getVersion());
 			else if(result == Result.ALLOW){
 				this.getLogger().info("Enabling Faction alerts for Factions 2.4.0+...");
-				ActionAlertModule module = (ActionAlertModule) Class.forName("me.superckl.actionalert.factions.FactionAlert").getConstructor(this.getClass()).newInstance(this);
+				final ActionAlertModule module = (ActionAlertModule) Class.forName("me.superckl.actionalert.factions.FactionAlert").getConstructor(this.getClass()).newInstance(this);
 				module.onEnable();
 				this.manager.addModule(ModuleType.FACTIONS, module);
+				Metrics.getModulesGraph().addPlotter(new SimplePlotter("Factions", 1));
+			}else if(result == null){
+				this.getLogger().info("Enabling Faction alerts for Factions 1.8.2...");
+				final ActionAlertModule module = (ActionAlertModule) Class.forName("me.superckl.actionalert.factions_1_8_2.FactionAlert").getConstructor(this.getClass()).newInstance(this);
+				module.onEnable();
+				this.manager.addModule(ModuleType.FACTIONS, module);
+				Metrics.getModulesGraph().addPlotter(new SimplePlotter("Factions", 1));
 			}else{
 				this.getLogger().info("Enabling Faction alerts for Factions 1.6.9.5...");
-				ActionAlertModule module = (ActionAlertModule) Class.forName("me.superckl.actionalert.factions-1.6.9.4.FactionAlert").getConstructor(this.getClass()).newInstance(this);
+				final ActionAlertModule module = (ActionAlertModule) Class.forName("me.superckl.actionalert.factions_1_6_9_4.FactionAlert").getConstructor(this.getClass()).newInstance(this);
 				module.onEnable();
 				this.manager.addModule(ModuleType.FACTIONS, module);
+				Metrics.getModulesGraph().addPlotter(new SimplePlotter("Factions", 1));
 			}
 		}
+		if(this.verboseLogging)
+			this.getLogger().info("Starting metrics...");
+		Metrics.start();
+		this.getLogger().info("ActionAlert enabled!");
 	}
 
 	@Override

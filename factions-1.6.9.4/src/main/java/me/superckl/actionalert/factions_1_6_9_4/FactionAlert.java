@@ -124,7 +124,7 @@ public class FactionAlert extends ActionAlertModule{
 	public void checkConfigs(final World ... notInList){
 		try {
 			@SuppressWarnings("deprecation") //Supressed until we are no longer backwards compatible
-			val config = YamlConfiguration.loadConfiguration(this.getClass().getResourceAsStream("/default-1.6.9.4.yml"));
+			val config = YamlConfiguration.loadConfiguration(this.getClass().getResourceAsStream("/factions_default-1.6.9.4.yml"));
 			val worlds = this.getInstance().getServer().getWorlds();
 			for(val world:notInList)
 				if(!worlds.contains(world))

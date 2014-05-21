@@ -1,4 +1,4 @@
-package me.superckl.actionalert.factions;
+package me.superckl.actionalert.factions_1_8_2;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,16 +18,16 @@ import me.superckl.actionalert.ActionAlertModule;
 import me.superckl.actionalert.AlertType;
 import me.superckl.actionalert.ModuleType;
 import me.superckl.actionalert.commands.ACommand;
-import me.superckl.actionalert.factions.commands.AlertsCommand;
-import me.superckl.actionalert.factions.commands.AlertsCommandInjection;
-import me.superckl.actionalert.factions.commands.FactionsCommand;
-import me.superckl.actionalert.factions.groups.FactionSpecificAlertGroup;
-import me.superckl.actionalert.factions.groups.NameplateAlertGroup;
-import me.superckl.actionalert.factions.groups.SimpleAlertGroup;
-import me.superckl.actionalert.factions.listeners.FactionListeners;
-import me.superckl.actionalert.factions.listeners.NameplateManager;
-import me.superckl.actionalert.factions.listeners.WorldLoadListeners;
-import me.superckl.actionalert.factions.utils.Utilities;
+import me.superckl.actionalert.factions_1_8_2.commands.AlertsCommand;
+import me.superckl.actionalert.factions_1_8_2.commands.AlertsCommandInjection;
+import me.superckl.actionalert.factions_1_8_2.commands.FactionsCommand;
+import me.superckl.actionalert.factions_1_8_2.groups.FactionSpecificAlertGroup;
+import me.superckl.actionalert.factions_1_8_2.groups.NameplateAlertGroup;
+import me.superckl.actionalert.factions_1_8_2.groups.SimpleAlertGroup;
+import me.superckl.actionalert.factions_1_8_2.listeners.FactionListeners;
+import me.superckl.actionalert.factions_1_8_2.listeners.NameplateManager;
+import me.superckl.actionalert.factions_1_8_2.listeners.WorldLoadListeners;
+import me.superckl.actionalert.factions_1_8_2.utils.Utilities;
 import me.superckl.actionalert.groups.AlertGroupStorage;
 
 import org.bukkit.ChatColor;
@@ -35,8 +35,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.massivecraft.factions.Factions;
-import com.massivecraft.factions.Rel;
+import com.massivecraft.factions.P;
+import com.massivecraft.factions.struct.Rel;
 
 @ExtensionMethod(Utilities.class)
 @Log(topic = "ActionAlert:Factions")
@@ -84,13 +84,10 @@ public class FactionAlert extends ActionAlertModule{
 		this.getLogger().info("FactionAlert enabled!");
 	}
 
+
 	@Override
 	public void onDisable(){
 		FactionAlert.fInstance = null;
-	}
-
-	public Logger getLogger(){
-		return FactionAlert.log;
 	}
 
 	/**
@@ -127,7 +124,7 @@ public class FactionAlert extends ActionAlertModule{
 	public void checkConfigs(final World ... notInList){
 		try {
 			@SuppressWarnings("deprecation") //Supressed until we are no longer backwards compatible
-			val config = YamlConfiguration.loadConfiguration(this.getClass().getResourceAsStream("/factions_default.yml"));
+			val config = YamlConfiguration.loadConfiguration(this.getClass().getResourceAsStream("/factions_default-1.8.2.yml"));
 			val worlds = this.getInstance().getServer().getWorlds();
 			for(val world:notInList)
 				if(!worlds.contains(world))
@@ -187,12 +184,11 @@ public class FactionAlert extends ActionAlertModule{
 		if(this.cmdInjected)
 			return;
 		this.getLogger().info("Injecting alerts command...");
-		val f = (Factions) this.getInstance().getServer().getPluginManager().getPlugin("Factions");
-		if(f == null){
-			this.getLogger().severe("Factions doesn't exist but passed the dependency??? What kind of rig are you running here?");
+		if(P.p == null){
+			this.getLogger().severe("Factions isn't enabled???");
 			return;
 		}
-		f.getOuterCmdFactions().addSubCommand(new AlertsCommandInjection((AlertsCommand) commands[0]));
+		P.p.cmdBase.addSubCommand(new AlertsCommandInjection((AlertsCommand) commands[0]));
 		this.cmdInjected = true;
 	}
 
@@ -258,6 +254,11 @@ public class FactionAlert extends ActionAlertModule{
 		val prefixGroup = new NameplateAlertGroup(prefix, AlertType.PREFIX, prefixFormat);
 		val suffixGroup = new NameplateAlertGroup(suffix, AlertType.SUFFIX, suffixFormat);
 		return new AlertGroupStorage(ModuleType.FACTIONS, alertGroups[0], alertGroups[1], alertGroups[2], death, prefixGroup, suffixGroup);
+	}
+
+
+	public Logger getLogger() {
+		return FactionAlert.log;
 	}
 
 }

@@ -180,6 +180,7 @@
   <modules>
   	<module>factions</module>
   	<module>factions-1.6.9.4</module>
+  	<module>factions-1.8.2</module>
     <module>actionalert</module>
     <module>shader</module>
   </modules>
